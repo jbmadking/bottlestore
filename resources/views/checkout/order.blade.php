@@ -25,7 +25,7 @@
                         </tr>
                         <tr>
                             <td class="pull-right"><strong>Invoice #</strong></td>
-                            <td>{{ $order->id }}</td>
+                            <td>{{ $order->invoice_no }}</td>
                         </tr>
                         <tr>
                             <td class="pull-right"><strong>Date</strong></td>
@@ -69,7 +69,7 @@
             <span class="span3 pull-right">
                 <form name="payment-form" class="form-horizontal" action="" method="get">
                     <!--https://www.payfast.co.za/eng/process-->
-                    <input type="hidden" name="payfast_url" id="payfast_url" value="https://sandbox.payfast.co.za/eng/process">
+                    <input type="hidden" name="payfast_url" id="payfast_url" value="{{url('payment/notify')}}">
                     <input type="hidden" name="merchant_id" id="merchant_id" value="10000100">
                     <input type="hidden" name="merchant_key" id="merchant_key" value="46f0cd694581a">
                     <input type="hidden" name="return_url" id="return_url" value="{{url('payment/success')}}">
@@ -79,7 +79,7 @@
                     <input type="hidden" name="item_description" id="item_description" value="This is test text for the description">
                     <input type="hidden" name="email_confirmation" id="email_confirmation" value="1">
                     <input type="hidden" name="confirmation_address" id="confirmation_address" value="{{ $order->user->email }}">
-                    <input type="hidden" name="payment_id" id="payment_id" value="{{ $order->id }}">
+                    <input type="hidden" name="payment_id" id="payment_id" value="{{ $order->invoice_no }}">
                     <input type="hidden" name="amount" id="amount" value="{{ $order->total }}">
                     <input type="hidden" name="name_first" id="name_first" value="{{ $order->user->name }}">
                     <input type="hidden" name="name_last" id="name_last" value="{{ $order->user->name }}">

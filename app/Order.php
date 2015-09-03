@@ -9,6 +9,7 @@ class Order extends Model
 
     protected $fillable = [
         'user_id',
+        'invoice_no',
         'billing_id',
         'shipping_id',
         'status',
@@ -43,6 +44,38 @@ class Order extends Model
     public function shippingAddress()
     {
         return $this->belongsTo('App\Address', 'shipping_id', 'id');
+    }
+
+    /**
+     * An Order's Billing Address
+     *
+     * @return BelongsTo
+     */
+    public function billingAddress()
+    {
+        return $this->belongsTo('App\Address', 'billing_id', 'id');
+    }
+
+    public function setInvoiceNoAttribute()
+    {
+        $this->attributes['invoice_no'] = $this->generateInvoiceNumber();
+    }
+
+    /**
+     * Generates a unique invoice number
+     *
+     * @return string
+     */
+    private function generateInvoiceNumber()
+    {
+        $invoice_no = 'INV' . mt_rand(100000, 999999);
+        $order = Order::where(['invoice_no' => $invoice_no])->get(['invoice_no']);
+
+        if (count($order)) {
+            $this->generateInvoiceNumber();
+        }
+
+        return $invoice_no;
     }
 
 }

@@ -56,13 +56,13 @@ Route::post(
 );
 
 Route::get(
-    'payment/success',    ['as' => 'payment.index', 'uses' => 'PaymentController@success']
+    'payment/success', ['as' => 'payment.index', 'uses' => 'PaymentController@success']
 );
 Route::get(
-    'payment/cancelled',    ['as' => 'payment.index', 'uses' => 'PaymentController@cancelled']
+    'payment/cancelled', ['as' => 'payment.index', 'uses' => 'PaymentController@cancelled']
 );
-Route::get(
-    'payment/notify',    ['as' => 'payment.index', 'uses' => 'PaymentController@notify']
+Route::post(
+    'payment/notify', ['as' => 'payment.index', 'uses' => 'PaymentController@notify']
 );
 /**
  * Authentication

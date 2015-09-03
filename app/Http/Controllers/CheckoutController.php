@@ -160,7 +160,8 @@ class CheckoutController extends Controller
                 'user_id' => Auth::user()->id,
                 'billing_id' => $request->get('billing'),
                 'shipping_id' => $request->get('shipping'),
-                'status' => 'new',
+                'status' => 'unpaid',
+                'invoice_no' => 'INVOICE_NO',
                 'total' => Cart::total()
             ]
         );

@@ -75,8 +75,7 @@ var createElement = (function () {
 })();
 
 function postToURL (url, values) {
-    console.log(jQuery.param(values));
-    return;
+
     values = values || {};
 
     var form = createElement("form", {

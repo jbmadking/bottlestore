@@ -1,14 +1,29 @@
 <?php namespace App\Http\Controllers;
 
+use App\Http\Controllers\Response;
 use App\Http\Requests;
+use App\Order;
+use App\Transaction;
 use Illuminate\Http\Request;
 use Illuminate\Log\Writer;
 use Illuminate\Support\Facades\Auth;
-use Monolog\Handler\ErrorLogHandler;
-use Monolog\Logger;
 
 class PaymentController extends Controller
 {
+
+    /**
+     * @var array Valid PayFast hosts list
+     */
+    protected $validHosts = [
+        'www.payfast.co.za',
+        'sandbox.payfast.co.za',
+        'w1w.payfast.co.za',
+        'w2w.payfast.co.za'
+    ];
+
+    const SANDBOX_MODE = true;
+    const PF_USER_AGENT = 'Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; SV1)';
+    const PF_TIMEOUT = 30;
 
     /**
      * Successful payment page.
@@ -37,70 +52,77 @@ class PaymentController extends Controller
     /**
      * PayFast notify
      *
-     * @param Request                $request
+     * @param Request $request
+     * @param Writer  $logger
      *
-     * @param \Illuminate\Log\Writer $logger
-     *
-     * @return \App\Http\Controllers\Response
+     * @return Response
      */
     public function notify(Request $request, Writer $logger)
     {
-
-        $logger->useFiles('payFast.log');
 
         //Notify Payfast
         header('HTTP/1.0 200 OK');
         flush();
 
-        // Store Posted variables from ITN
+        $logger->useFiles('payFast.txt');
 
-        if (empty($_GET)) {
+        if ($request->method() !== 'POST') {
 
             $logger->error('Error -- POST variables not set');
 
             exit();
         }
 
-        $logger->debug('Posted Variables --' . "\n" . implode("\n", $_GET));
+        $logger->debug(
+            "Posted Variables --\n" . implode(
+                "\n", array_filter(
+                    $request->input(), function ($value) {
+                    return empty($value);
+                }
+                )
+            )
+        );
 
-        $payFastData = $this->cleanPostVariables($_GET);
+        $payFastData = $this->cleanPostVariables($request->input());
 
         $serialisedPayFastData = $this->serialisePostVariables($payFastData);
 
-        $this->checkPostedVariables($payFastData, $serialisedPayFastData, $logger);
+        $signature = $request->input('signature');
 
-        //Save the posted information
+        if ($signature === null) {
 
+            $logger->error("Error -- Signature not set \n");
 
-        // Verify source IP
-        $validHosts = [
-            'www.payfast.co.za',
-            'sandbox.payfast.co.za',
-            'w1w.payfast.co.za',
-            'w2w.payfast.co.za'
-        ];
-
-        $validIps = [];
-
-        foreach ($validHosts as $pfHostname) {
-            $ips = gethostbynamel($pfHostname);
-
-            if ($ips !== false)
-                $validIps = array_merge($validIps, $ips);
+            exit();
         }
 
-        $validIps = array_unique($validIps);
+        if (!$this->hasValidSignature($signature, $serialisedPayFastData)) {
 
-        if (!in_array($_SERVER['REMOTE_ADDR'], $validIps)) {
+            $output = "Error -- Signature mismatch\n\n";
+            $output .= "Security Signature:\n\n";
+            $output .= "\t- posted     = " . $signature . "\n";
+            $output .= "\t- calculated = " . $serialisedPayFastData . "\n";
+            $output .= "\t- result     = " . $payFastData['payment_status'] . "\n";
 
-            $logger->error('Error -- Invalid IP Address');
+            $logger->error($output);
 
-            die();
+            exit();
         }
 
+        Transaction::create($request->input());
+
+        if (!$this->isValidPayfastHost($request)) {
+
+            $logger->error('Invalid PayFast IP Address');
+
+            exit();
+        }
+
+        $pfHost = self::SANDBOX_MODE ? 'sandbox.payfast.co.za' : 'www.payfast.co.za';
         $response = '';
 
         if (in_array('curl', get_loaded_extensions())) {
+
             // Variable initialization
             $url = 'https://' . $pfHost . '/eng/query/validate';
 
@@ -109,7 +131,7 @@ class PaymentController extends Controller
 
             // Set cURL options - Use curl_setopt for freater PHP compatibility
             // Base settings
-            curl_setopt($ch, CURLOPT_USERAGENT, PF_USER_AGENT);  // Set user agent
+            curl_setopt($ch, CURLOPT_USERAGENT, self::PF_USER_AGENT);  // Set user agent
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);      // Return output as string rather than outputting it
             curl_setopt($ch, CURLOPT_HEADER, false);             // Don't include header in output
             curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
@@ -118,10 +140,10 @@ class PaymentController extends Controller
             // Standard settings
             curl_setopt($ch, CURLOPT_URL, $url);
             curl_setopt($ch, CURLOPT_POST, true);
-            curl_setopt($ch, CURLOPT_POSTFIELDS, $payFastParamString);
-            curl_setopt($ch, CURLOPT_TIMEOUT, PF_TIMEOUT);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, $serialisedPayFastData);
+            curl_setopt($ch, CURLOPT_TIMEOUT, self::PF_TIMEOUT);
             if (!empty($pfProxy))
-                curl_setopt($ch, CURLOPT_PROXY, $proxy);
+                curl_setopt($ch, CURLOPT_PROXY, $pfProxy);
 
             // Execute CURL
             $response = curl_exec($ch);
@@ -129,21 +151,20 @@ class PaymentController extends Controller
         } else {
 
             $header = '';
-            $res = '';
             $headerDone = false;
 
             // Construct Header
-            $header = "POST /eng/query/validate HTTP/1.0\r\n";
+            $header .= "POST /eng/query/validate HTTP/1.0\r\n";
             $header .= "Host: " . $pfHost . "\r\n";
-            $header .= "User-Agent: " . PF_USER_AGENT . "\r\n";
+            $header .= "User-Agent: " . self::PF_USER_AGENT . "\r\n";
             $header .= "Content-Type: application/x-www-form-urlencoded\r\n";
-            $header .= "Content-Length: " . strlen($payFastParamString) . "\r\n\r\n";
+            $header .= "Content-Length: " . strlen($serialisedPayFastData) . "\r\n\r\n";
 
             // Connect to server
-            $socket = fsockopen('ssl://' . $pfHost, 443, $errno, $errstr, PF_TIMEOUT);
+            $socket = fsockopen('ssl://' . $pfHost, 443, $errno, $errstr, self::PF_TIMEOUT);
 
             // Send command to server
-            fputs($socket, $header . $payFastParamString);
+            fputs($socket, $header . $serialisedPayFastData);
 
             // Read the response from the server
             while (!feof($socket)) {
@@ -171,21 +192,28 @@ class PaymentController extends Controller
             die();
         }
 
+        $order = Order::where('invoice_no', $request->input('m_payment_id'))->first();
+
         switch ($payFastData['payment_status']) {
             case 'COMPLETE':
                 $logger->debug('Payment Status -- COMPLETE');
+                $order->status = 'paid';
                 break;
             case 'FAILED':
                 $logger->error('Payment Status -- FAILED');
+                $order->status = 'failed';
                 break;
             case 'PENDING':
                 $logger->debug('Payment Status -- PENDING');
+                $order->status = 'pending';
                 break;
             default:
                 $logger->error('Payment Status -- DEFAULT');
+                $order->status = 'error';
                 break;
         }
 
+        $order->save();
     }
 
     /**
@@ -198,42 +226,28 @@ class PaymentController extends Controller
 
         return array_map(
             function ($val) {
-                stripslashes($val);
+                return urlencode($val);
             }, $payFastData
         );
     }
 
     /**
-     * @param $payFastData
+     * @param $payFastSignature
      * @param $payFastParamString
-     * @param $logger
      *
-     * @return array
-     * @internal param $payFastData
+     * @return boolean
      */
-    protected function checkPostedVariables($payFastData, $payFastParamString, $logger)
+    protected function hasValidSignature($payFastSignature, $payFastParamString)
     {
 
-
-        // Remove the last '&' from the parameter string
-        $payFastParamString = substr($payFastParamString, 0, -1);
         $signature = md5($payFastParamString);
 
-        if (!isset($payFastData['signature'])) {
-
-            $logger->debug('Error -- No Signature sent');
+        if (!isset($payFastSignature)) {
+            return false;
         }
-        if ($signature) {
 
-            $output = "Error -- Signature mismatch\n\n";
-            $output .= "Security Signature:\n\n";
-//            $output .= "\t- posted     = " . $payFastData['signature'] . "\n";
-            $output .= "\t- calculated = " . $signature . "\n";
-//            $output .= "\t- result     = " . ($result ? 'SUCCESS' : 'FAILURE') . "\n";
-
-            $logger->error($output);
-
-
+        if ($signature !== $payFastSignature) {
+            return false;
         }
 
         return true;
@@ -246,13 +260,44 @@ class PaymentController extends Controller
      */
     protected function serialisePostVariables($payFastData)
     {
-// Dump the submitted variables and calculate security signature
+
         $payFastParamString = '';
         foreach ($payFastData as $key => $val) {
             if ($key != 'signature')
-                $payFastParamString .= $key . '=' . urlencode($val) . '&';
+                $payFastParamString .= $key . '=' . $val . '&';
         }
 
-        return $payFastParamString;
+        return substr($payFastParamString, 0, -1);
+    }
+
+    /**
+     * Check if referring host has a valid PayFast ip address
+     *
+     * @param Request $request
+     *
+     * @return bool
+     */
+    protected function isValidPayFastHost(Request $request)
+    {
+        $validIps = [];
+
+        foreach ($this->validHosts as $payFastHostname) {
+
+            $payFastIpAddress = gethostbynamel($payFastHostname);
+
+            if ($payFastIpAddress !== false) {
+
+                $validIps = array_merge($payFastIpAddress, $validIps);
+            }
+        }
+
+        $validIps = array_unique($validIps);
+
+        if (in_array($request->server('REMOTE_ADDR'), $validIps)) {
+
+            return true;
+        }
+
+        return false;
     }
 }
