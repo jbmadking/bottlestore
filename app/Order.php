@@ -61,6 +61,12 @@ class Order extends Model
         $this->attributes['invoice_no'] = $this->generateInvoiceNumber();
     }
 
+    public function scopeFindByInvoiceNumber($query, $invoiceNumber)
+    {
+        $query->where('invoice_no', '=', $invoiceNumber);
+    }
+
+
     /**
      * Generates a unique invoice number
      *

@@ -1,5 +1,7 @@
 <?php namespace App\Http\Controllers;
 
+use App\Commands\AddProductToShoppingCart;
+use App\Commands\RemoveProductFromShoppingCart;
 use Gloudemans\Shoppingcart\Facades\Cart;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -15,11 +17,7 @@ class CartController extends Controller
      */
     public function index()
     {
-
-        $cartItems = Cart::content()->toArray();
-        $cartTotal = Cart::total();
-
-        return view('pages.partials.shopping.cart', compact('cartItems', 'cartTotal'));
+        return $this->renderCart();
     }
 
     /**
@@ -31,23 +29,11 @@ class CartController extends Controller
      */
     public function store(Request $request)
     {
-        try {
-            $product = $request->all();
+        $product = $request->only(['id', 'name', 'quantity', 'price']);
 
-            $cart = Cart::associate('Product', 'App');
-            $cart->add(
-                $product['id'],
-                $product['name'],
-                $product['quantity'],
-                $product['price']
-            );
+        $this->dispatch(new AddProductToShoppingCart($product));
 
-            return $product['id'];
-
-        } catch (Exception $e) {
-
-            return $e->getMessage();
-        }
+        return $this->renderCart();
     }
 
     /**
@@ -56,11 +42,24 @@ class CartController extends Controller
      * @param Request $request
      *
      * @return Response
-     *
      */
     public function destroy(Request $request)
     {
-        Cart::remove($request->get('id'));
+        $this->dispatch(new RemoveProductFromShoppingCart($request->get('id')));
+
+        return $this->renderCart();
+    }
+
+    /**
+     * @return \Illuminate\View\View
+     */
+    protected function renderCart()
+    {
+        $cartItems = Cart::content()->toArray();
+
+        $cartTotal = Cart::total();
+
+        return view('pages.partials.shopping.cart', compact('cartItems', 'cartTotal'));
     }
 
 }

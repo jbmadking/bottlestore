@@ -9,7 +9,6 @@ class SignUpNewUserHandler {
 	/**
 	 * Create the command handler.
 	 *
-	 * @return void
 	 */
 	public function __construct()
 	{

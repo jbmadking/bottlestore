@@ -11,8 +11,6 @@ $I->amOnPage('/admin/categories');
 $I->click('Add Category');
 $I->seeCurrentUrlEquals('/admin/categories/create');
 
-$I->selectOption('parent_id', '7');
-
 $I->fillField('name', 'Malt Liquor');
 $I->fillField('description', 'Malt Liquor for you to describe');
 

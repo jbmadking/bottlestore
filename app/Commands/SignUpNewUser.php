@@ -19,6 +19,9 @@ class SignUpNewUser extends Command implements ShouldBeQueued
     /**
      * Create a new command instance.
      *
+     * @param $username
+     * @param $email
+     * @param $password
      */
     public function __construct($username, $email, $password)
     {

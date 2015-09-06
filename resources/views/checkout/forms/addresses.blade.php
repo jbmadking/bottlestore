@@ -1,6 +1,6 @@
 {!! Form::open(
     [
-    'route' => 'checkout.address',
+    'route' => 'checkout.addresses.save',
     'class' => 'form-horizontal',
     'method' => 'POST'
     ]) !!}
@@ -19,7 +19,7 @@
     @include(
     'checkout.forms.address',
     [
-    'name' => 'billing',
+    'addressType' => 'billing',
     'submitButtonText' => 'Add Billing Address',
     ])
 </div>
@@ -28,7 +28,7 @@
     @include(
     'checkout.forms.address',
     [
-        'name' => 'shipping',
+        'addressType' => 'shipping',
         'submitButtonText' => 'Add Shipping Address',
     ])
 </div>

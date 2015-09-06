@@ -1,6 +1,16 @@
 $(document).ready(function () {
 
-    updateCart('');
+    var shoppingCart = $('#shopping-cart');
+
+    $.ajax({
+        url    : '/cart/index',
+        method : 'GET',
+        success: function (addResponse) {
+            shoppingCart.html(addResponse);
+        },
+        error  : function () {
+        }
+    });
 
     $('.add-to-cart').click(function () {
 
@@ -20,37 +30,11 @@ $(document).ready(function () {
                 price   : price,
             },
             success: function (addResponse) {
-
-                updateCart(addResponse);
+                shoppingCart.html(addResponse);
             },
             error  : function () {
 
             }
-
         });
     });
-
 });
-
-function updateCart (addResponse) {
-
-    var shoppingCart = $('#shopping-cart');
-
-    $.ajax({
-        url    : '/cart/index',
-        method : 'GET',
-        success: function (indexResponse) {
-
-            shoppingCart.html(indexResponse);
-
-            $('#product-' + addResponse).css('background-color', '#265a66');
-            $('#product-' + addResponse).css('color', '#ffffff');
-
-        },
-        error  : function () {
-
-        }
-    });
-
-}
-

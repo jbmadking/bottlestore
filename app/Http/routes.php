@@ -43,12 +43,12 @@ Route::post(
     'checkout/login', ['as' => 'checkout.authenticate', 'uses' => 'CheckoutController@authenticate']
 );
 
-Route::get(
-    'checkout/address', ['as' => 'checkout.address', 'uses' => 'CheckoutController@address']
+Route::post(
+    'checkout/addresses/save', ['as' => 'checkout.addresses.save', 'uses' => 'CheckoutController@saveAddress']
 );
 
-Route::post(
-    'checkout/address', ['as' => 'checkout.address', 'uses' => 'CheckoutController@saveAddress']
+Route::get(
+    'checkout/addresses', ['as' => 'checkout.addresses', 'uses' => 'CheckoutController@addresses']
 );
 
 Route::post(

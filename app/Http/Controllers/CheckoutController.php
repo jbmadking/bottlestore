@@ -1,13 +1,14 @@
 <?php namespace App\Http\Controllers;
 
 
-use App\Order;
+use App\Commands\CreateNewOrder;
+use App\Commands\LoginSiteUser;
+use App\Commands\RegisterGuestUser;
+use App\Commands\SaveUserAddresses;
 use App\OrderItems;
-use App\User;
-use App\Http\Requests\UserRequest;
 use Gloudemans\Shoppingcart\Facades\Cart;
-use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Redirector;
 use Illuminate\Support\Facades\Auth;
@@ -37,8 +38,6 @@ class CheckoutController extends Controller
      */
     public function index()
     {
-
-        //TODO: add-command CheckOutShoppingCart
         $cartItems = Cart::content()->toArray();
         $cartTotal = Cart::total();
 
@@ -52,23 +51,17 @@ class CheckoutController extends Controller
      */
     public function register()
     {
-        //TODO: add-command RegisterGuestUser
         return view('checkout.register');
     }
 
     /**
-     * @param UserRequest $request
-     *
-     * @return RedirectResponse|Redirector
+     * @return Redirector
      */
-    public function createUser(UserRequest $request)
+    public function createUser()
     {
-        //TODO: add-command CreateGuestUser
-        $user = User::create($request->all());
+        $this->dispatch(new RegisterGuestUser($this->auth));
 
-        $this->auth->login($user);
-
-        return redirect('checkout/address');
+        return redirect('checkout/addresses');
     }
 
     /**
@@ -80,23 +73,20 @@ class CheckoutController extends Controller
     }
 
     /**
-     * @param Request $request
-     *
      * @return RedirectResponse|Redirector
      */
-    public function authenticate(Request $request)
+    public function authenticate()
     {
-        if (!$this->auth->attempt(
-            $request->except(['_token', 'remember', 'login_user']),
-            $request->get('remember')
-        )
-        ) {
+        $userLoggedIn = $this->dispatch(new LoginSiteUser);
+
+        if (!$userLoggedIn) {
+
             flash('Unable to log you in');
 
             return redirect('checkout/login');
         }
 
-        return redirect('checkout/address');
+        return redirect('checkout/addresses');
     }
 
     /**
@@ -104,13 +94,13 @@ class CheckoutController extends Controller
      *
      * @return Response
      */
-    public function address()
+    public function addresses()
     {
-        //TODO: add-command SelectBillingAndShippingAddress
         if (!Auth::user()) {
+            flash('Please Register first, or login if you are already registered', 'error');
+
             return redirect('checkout/register');
         }
-
         $addresses = Auth::user()->addresses()->lists('street_name', 'id');
 
         return view('checkout.address', compact('addresses'));
@@ -122,63 +112,27 @@ class CheckoutController extends Controller
      *
      * @param Request $request
      *
-     * @return RedirectResponse|Redirector
+     * @return Redirector
      */
     public function saveAddress(Request $request)
     {
 
-        //TODO: add-command SaveAddresses
-        $shippingAddress = array_filter($request->get('shipping'));
-        $billingAddress = array_filter($request->get('billing'));
+        $this->dispatch(new SaveUserAddresses($request));
 
-        if (!empty($billingAddress)) {
-            Auth::user()->addresses()->create($request->get('billing'));
-        }
+        $addresses = Auth::user()->addresses()->lists('street_name', 'id');
 
-        if (!empty($shippingAddress)) {
-            Auth::user()->addresses()->create($request->get('shipping'));
-        }
-
-        return redirect('checkout/address');
-
+        return view('checkout.address', compact('addresses'));
     }
 
     /**
      * Display Order Payment form.
      *
-     * @param \Illuminate\Http\Request $request
-     *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
-    public function createOrder(Request $request)
+    public function createOrder()
     {
-        //TODO: add-command CreateNewOrder
-        $orderItems = Cart::content();
+        $order = $this->dispatch(new CreateNewOrder());
 
-        $order = Order::create(
-            [
-                'user_id' => Auth::user()->id,
-                'billing_id' => $request->get('billing'),
-                'shipping_id' => $request->get('shipping'),
-                'status' => 'unpaid',
-                'invoice_no' => 'INVOICE_NO',
-                'total' => Cart::total()
-            ]
-        );
-
-        foreach ($orderItems as $orderItem) {
-
-            $orderItemArray['product_id'] = $orderItem->id;
-            $orderItemArray['product'] = $orderItem->name;
-            $orderItemArray['quantity'] = $orderItem->qty;
-            $orderItemArray['price'] = $orderItem->price;
-            $orderItemArray['subtotal'] = $orderItem->subtotal;
-
-            $order->orderItems()->create($orderItemArray);
-        }
-
-//        var_dump($order->user);
-//        dd($order);
         return view('checkout.order', compact('order'));
     }
 }

@@ -10,6 +10,9 @@ use Illuminate\Support\Facades\Auth;
 
 class PaymentController extends Controller
 {
+    const SATUS_FAILED = 'FAILED';
+    const STATUS_COMPLETE = 'COMPLETE';
+    const STATUS_PENDING = 'PENDING';
 
     /**
      * @var array Valid PayFast hosts list
@@ -77,10 +80,10 @@ class PaymentController extends Controller
             "Posted Variables --\n" . implode(
                 "\n", array_filter(
                     $request->input(), function ($value) {
-                    return empty($value);
+                    return !empty($value);
                 }
                 )
-            )
+            ) . "\n"
         );
 
         $payFastData = $this->cleanPostVariables($request->input());
@@ -119,67 +122,14 @@ class PaymentController extends Controller
         }
 
         $pfHost = self::SANDBOX_MODE ? 'sandbox.payfast.co.za' : 'www.payfast.co.za';
-        $response = '';
+        $hostUrl = 'https://' . $pfHost . '/eng/query/validate';
 
         if (in_array('curl', get_loaded_extensions())) {
 
-            // Variable initialization
-            $url = 'https://' . $pfHost . '/eng/query/validate';
-
-            // Create default cURL object
-            $ch = curl_init();
-
-            // Set cURL options - Use curl_setopt for freater PHP compatibility
-            // Base settings
-            curl_setopt($ch, CURLOPT_USERAGENT, self::PF_USER_AGENT);  // Set user agent
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);      // Return output as string rather than outputting it
-            curl_setopt($ch, CURLOPT_HEADER, false);             // Don't include header in output
-            curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
-            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-
-            // Standard settings
-            curl_setopt($ch, CURLOPT_URL, $url);
-            curl_setopt($ch, CURLOPT_POST, true);
-            curl_setopt($ch, CURLOPT_POSTFIELDS, $serialisedPayFastData);
-            curl_setopt($ch, CURLOPT_TIMEOUT, self::PF_TIMEOUT);
-            if (!empty($pfProxy))
-                curl_setopt($ch, CURLOPT_PROXY, $pfProxy);
-
-            // Execute CURL
-            $response = curl_exec($ch);
-            curl_close($ch);
+            $response = $this->checkPaymentStatusCurl($hostUrl, $serialisedPayFastData);
         } else {
 
-            $header = '';
-            $headerDone = false;
-
-            // Construct Header
-            $header .= "POST /eng/query/validate HTTP/1.0\r\n";
-            $header .= "Host: " . $pfHost . "\r\n";
-            $header .= "User-Agent: " . self::PF_USER_AGENT . "\r\n";
-            $header .= "Content-Type: application/x-www-form-urlencoded\r\n";
-            $header .= "Content-Length: " . strlen($serialisedPayFastData) . "\r\n\r\n";
-
-            // Connect to server
-            $socket = fsockopen('ssl://' . $pfHost, 443, $errno, $errstr, self::PF_TIMEOUT);
-
-            // Send command to server
-            fputs($socket, $header . $serialisedPayFastData);
-
-            // Read the response from the server
-            while (!feof($socket)) {
-                $line = fgets($socket, 1024);
-
-                // Check if we are finished reading the header yet
-                if (strcmp($line, "\r\n") == 0) {
-                    // read the header
-                    $headerDone = true;
-                } // If header has been processed
-                else if ($headerDone) {
-                    // Read the main response
-                    $response .= $line;
-                }
-            }
+            $response = $this->checkPaymentStatusHttp($pfHost, $serialisedPayFastData);
         }
 
         $lines = explode("\r\n", $response);
@@ -192,28 +142,7 @@ class PaymentController extends Controller
             die();
         }
 
-        $order = Order::where('invoice_no', $request->input('m_payment_id'))->first();
-
-        switch ($payFastData['payment_status']) {
-            case 'COMPLETE':
-                $logger->debug('Payment Status -- COMPLETE');
-                $order->status = 'paid';
-                break;
-            case 'FAILED':
-                $logger->error('Payment Status -- FAILED');
-                $order->status = 'failed';
-                break;
-            case 'PENDING':
-                $logger->debug('Payment Status -- PENDING');
-                $order->status = 'pending';
-                break;
-            default:
-                $logger->error('Payment Status -- DEFAULT');
-                $order->status = 'error';
-                break;
-        }
-
-        $order->save();
+        $this->updateOrderStatus($request, $logger, $payFastData);
     }
 
     /**
@@ -299,5 +228,116 @@ class PaymentController extends Controller
         }
 
         return false;
+    }
+
+    /**
+     * @param $hostUrl
+     * @param $serialisedPayFastData
+     * @param $pfProxy
+     *
+     * @return mixed
+     * @internal param $pfHost
+     */
+    protected function checkPaymentStatusCurl($hostUrl, $serialisedPayFastData, $pfProxy = null)
+    {
+
+        // Create default cURL object
+        $ch = curl_init();
+
+        // Set cURL options - Use curl_setopt for freater PHP compatibility
+        // Base settings
+        curl_setopt($ch, CURLOPT_USERAGENT, self::PF_USER_AGENT);  // Set user agent
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);      // Return output as string rather than outputting it
+        curl_setopt($ch, CURLOPT_HEADER, false);             // Don't include header in output
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+
+        // Standard settings
+        curl_setopt($ch, CURLOPT_URL, $hostUrl);
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $serialisedPayFastData);
+        curl_setopt($ch, CURLOPT_TIMEOUT, self::PF_TIMEOUT);
+        if (!empty($pfProxy))
+            curl_setopt($ch, CURLOPT_PROXY, $pfProxy);
+
+        // Execute CURL
+        $response = curl_exec($ch);
+        curl_close($ch);
+
+        return $response;
+    }
+
+    /**
+     * @param $pfHost
+     * @param $serialisedPayFastData
+     *
+     * @return string
+     */
+    protected function checkPaymentStatusHttp($pfHost, $serialisedPayFastData)
+    {
+        $header = '';
+        $headerDone = false;
+        $response = '';
+
+        // Construct Header
+        $header .= "POST /eng/query/validate HTTP/1.0\r\n";
+        $header .= "Host: " . $pfHost . "\r\n";
+        $header .= "User-Agent: " . self::PF_USER_AGENT . "\r\n";
+        $header .= "Content-Type: application/x-www-form-urlencoded\r\n";
+        $header .= "Content-Length: " . strlen($serialisedPayFastData) . "\r\n\r\n";
+
+        // Connect to server
+        $socket = fsockopen('ssl://' . $pfHost, 443, $errno, $errstr, self::PF_TIMEOUT);
+
+        // Send command to server
+        fputs($socket, $header . $serialisedPayFastData);
+
+        // Read the response from the server
+        while (!feof($socket)) {
+            $line = fgets($socket, 1024);
+
+            // Check if we are finished reading the header yet
+            if (strcmp($line, "\r\n") == 0) {
+                // read the header
+                $headerDone = true;
+            } // If header has been processed
+            else if ($headerDone) {
+                // Read the main response
+                $response .= $line;
+            }
+        }
+
+        return $response;
+    }
+
+    /**
+     * @param \Illuminate\Http\Request $request
+     * @param \Illuminate\Log\Writer   $logger
+     * @param                          $payFastData
+     */
+    protected function updateOrderStatus(Request $request, Writer $logger, $payFastData)
+    {
+        $order = Order::where('invoice_no', $request->input('m_payment_id'))->first();
+
+        switch ($payFastData['payment_status']) {
+            case self::STATUS_COMPLETE:
+                $logger->debug('Payment Status -- COMPLETE');
+                $order->status = 'paid';
+                break;
+            case self::SATUS_FAILED:
+                $logger->error('Payment Status -- FAILED');
+                $order->status = 'failed';
+                break;
+            case self::STATUS_PENDING:
+                $logger->debug('Payment Status -- PENDING');
+                $order->status = 'pending';
+                break;
+            default:
+                $logger->error('Payment Status -- DEFAULT');
+                $order->status = 'error';
+                break;
+        }
+
+        $order->save();
     }
 }

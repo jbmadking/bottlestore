@@ -21,14 +21,14 @@ $I->seeCurrentUrlEquals('/checkout/login');
 
 $I->fillInLoginForm();
 
-$I->seeCurrentUrlEquals('/checkout/address');
+$I->seeCurrentUrlEquals('/checkout/addresses');
 
 $I->fillInBillingAddress();
 $I->fillInShippingAddress();
 
 $I->click('Add Billing Address');
 
-$I->seeCurrentUrlEquals('/checkout/address');
+$I->seeCurrentUrlEquals('/checkout/addresses/save');
 
 $userAddresses = Auth::user()->addresses()->get()->toArray();
 

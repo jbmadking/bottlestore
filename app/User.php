@@ -43,6 +43,16 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
     }
 
     /**
+     * Encrypt password before persisting
+     *
+     * @param $password
+     */
+    public function setPasswordAttribute($password)
+    {
+        $this->attributes['password'] = bcrypt($password);
+    }
+
+    /**
      * Addresses for a User
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany

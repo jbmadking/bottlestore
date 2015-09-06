@@ -41,13 +41,14 @@
 
                 var product = $(this);
                 var id = product.attr('item-id');
+                var shoppingCart = $('#shopping-cart');
 
                 $.ajax({
                     url    : '/cart/destroy',
                     method : 'GET',
                     data   : {id: id},
-                    success: function () {
-                        updateCart('');
+                    success: function (addResponse) {
+                        shoppingCart.html(addResponse);
                     },
                     error  : function () {
 

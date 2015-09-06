@@ -31,7 +31,7 @@
                     <li class="row totals">
                         <span class="itemName quantity">Total:</span>
                         <span class="price itemName">{{ $cartTotal }}</span>
-                        <span class="order"><a class="text-center" href="{{ route('checkout.address') }}">Proceed to Checkout</a></span>
+                        <span class="order"><a class="text-center" href="{{ route('checkout.addresses') }}">Proceed to Checkout</a></span>
                     </li>
                 </ul>
             </div>
