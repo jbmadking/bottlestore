@@ -49,8 +49,6 @@ class AddProductToShoppingCart extends Command implements SelfHandling
 
             return $e->getMessage();
         }
-
-
     }
 
 }

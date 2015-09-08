@@ -18,7 +18,7 @@
             <div class="col-md-6">
 
                 <div class="form-group right">
-                    <a href="{{ url('admin/clients/add') }}" class="btn btn-primary">Add Client</a>
+                    <a href="{{ route('admin.clients.create') }}" class="btn btn-primary">Add Client</a>
                 </div>
 
             </div>
@@ -42,7 +42,7 @@
                     <tr>
                         <td><input type="checkbox"></td>
                         <td>
-                            <a href="{{ url('/admin/edit/client', ['user' => $user->id]) }}">
+                            <a href="{{ route('admin.clients.edit', ['user' => $user->id]) }}">
                                 {{ $user->name }}
                             </a>
                         </td>

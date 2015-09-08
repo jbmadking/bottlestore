@@ -147,22 +147,38 @@ function validatePayFastResponse (payFastUrl, merchantId) {
 }
 
 function quickPostPaymentToPayFast (payFastUrl) {
+
+    var invoice_no = document.getElementById('invoice_no').value;
+
+    $.ajax({
+        type   : 'GET',
+        url    : 'stamp/invoice/' + invoice_no,
+        success: function (result) {
+
+            alert(invoice_no + ':' + result);
+        },
+        error  : function () {
+
+            alert('error returned');
+        }
+    });
+
     // Input fields with the specified names must be present in the page, whether hidden or as user input, the gateway does validation as well if you don't do it yourself.
-    postPaymentToPayFast(payFastUrl,
-        document.getElementById('merchant_id').value,
-        document.getElementById('merchant_key').value,
-        document.getElementById('return_url').value,
-        document.getElementById('cancel_url').value,
-        document.getElementById('notify_url').value,
-        document.getElementById('name_first').value,
-        document.getElementById('name_last').value,
-        document.getElementById('email_address').value,
-        document.getElementById('payment_id').value,
-        document.getElementById('amount').value,
-        document.getElementById('item_name').value,
-        document.getElementById('item_description').value,
-        document.getElementById('email_confirmation').value,
-        document.getElementById('confirmation_address').value);
+    //postPaymentToPayFast(payFastUrl,
+    //    document.getElementById('merchant_id').value,
+    //    document.getElementById('merchant_key').value,
+    //    document.getElementById('return_url').value,
+    //    document.getElementById('cancel_url').value,
+    //    document.getElementById('notify_url').value,
+    //    document.getElementById('name_first').value,
+    //    document.getElementById('name_last').value,
+    //    document.getElementById('email_address').value,
+    //    document.getElementById('payment_id').value,
+    //    document.getElementById('amount').value,
+    //    document.getElementById('item_name').value,
+    //    document.getElementById('item_description').value,
+    //    document.getElementById('email_confirmation').value,
+    //    document.getElementById('confirmation_address').value);
 }
 
 function postPaymentToPayFast (payFastUrl, merchantId, merchantKey, returnUrl, cancelUrl, notifyUrl,

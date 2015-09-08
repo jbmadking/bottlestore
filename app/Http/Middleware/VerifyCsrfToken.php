@@ -8,7 +8,10 @@ class VerifyCsrfToken extends BaseVerifier
     /**
      * @var array Protected routes
      */
-    protected $openRoutes = ['payment/notify'];
+    protected $openRoutes = [
+        'payment/notify',
+        'checkout/invoice/stamp'
+    ];
 
     /**
      * Handle an incoming request.

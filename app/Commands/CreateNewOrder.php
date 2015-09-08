@@ -80,6 +80,7 @@ class CreateNewOrder extends Command implements SelfHandling
             $this->orderItems[$key]['price'] = $orderItem->price;
             $this->orderItems[$key]['subtotal'] = $orderItem->subtotal;
         }
+
         if (!empty($this->orderItems)) {
 
             foreach ($this->orderItems as $orderItem) {
@@ -101,7 +102,7 @@ class CreateNewOrder extends Command implements SelfHandling
             return false;
         }
 
-        $storageOrder = Order::findByInvoiceNumber($sessionOrder->invoice_no)->first();
+        $storageOrder = Order::findByInvoiceNumber($sessionOrder->invoice_no)->newOrder()->first();
 
         if ($storageOrder) {
 
@@ -123,7 +124,7 @@ class CreateNewOrder extends Command implements SelfHandling
                 'user_id' => Auth::user()->id,
                 'billing_id' => $request->get('billing'),
                 'shipping_id' => $request->get('shipping'),
-                'status' => 'unpaid',
+                'status' => 'new',
                 'total' => Cart::total(),
                 'invoice_no' => 'GENERATE_INVOICE_NO',
             ]

@@ -5,7 +5,7 @@ use App\Commands\CreateNewOrder;
 use App\Commands\LoginSiteUser;
 use App\Commands\RegisterGuestUser;
 use App\Commands\SaveUserAddresses;
-use App\OrderItems;
+use App\Commands\StampOrderForPayment;
 use Gloudemans\Shoppingcart\Facades\Cart;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -97,14 +97,12 @@ class CheckoutController extends Controller
     public function addresses()
     {
         if (!Auth::user()) {
-            flash('Please Register first, or login if you are already registered', 'error');
+            flash('Please Register first, or login if you are already registered');
 
             return redirect('checkout/register');
         }
-        $addresses = Auth::user()->addresses()->lists('street_name', 'id');
 
-        return view('checkout.address', compact('addresses'));
-
+        return $this->render();
     }
 
     /**
@@ -119,9 +117,7 @@ class CheckoutController extends Controller
 
         $this->dispatch(new SaveUserAddresses($request));
 
-        $addresses = Auth::user()->addresses()->lists('street_name', 'id');
-
-        return view('checkout.address', compact('addresses'));
+        return $this->render();
     }
 
     /**
@@ -134,5 +130,37 @@ class CheckoutController extends Controller
         $order = $this->dispatch(new CreateNewOrder());
 
         return view('checkout.order', compact('order'));
+    }
+
+    /**
+     * Update order changing status from new to unpaid
+     *
+     * @param int $invoiceNumber
+     *
+     * @return mixed
+     *
+     */
+    public function stampInvoice($invoiceNumber)
+    {
+        return ($this->dispatch(new StampOrderForPayment($invoiceNumber))) ? 'success' : 'fail';
+    }
+
+    /**
+     * @return \Illuminate\View\View
+     */
+    private function render()
+    {
+        $userAddresses = Auth::user()->addresses()->get()->toArray();
+
+        $addresses = [];
+
+        foreach ($userAddresses as $address) {
+            $addresses[$address['id']] = $address['street_number']
+                . ' ' . $address['street_name']
+                . ', ' . $address['suburb']
+                . ', ' . $address['city'];
+        }
+
+        return view('checkout.address', compact('addresses'));
     }
 }

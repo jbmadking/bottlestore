@@ -1,16 +1,16 @@
 <?php namespace App\Http\Controllers;
 
-use App\Http\Controllers\Response;
 use App\Http\Requests;
 use App\Order;
 use App\Transaction;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Log\Writer;
 use Illuminate\Support\Facades\Auth;
 
 class PaymentController extends Controller
 {
-    const SATUS_FAILED = 'FAILED';
+    const STATUS_FAILED = 'FAILED';
     const STATUS_COMPLETE = 'COMPLETE';
     const STATUS_PENDING = 'PENDING';
 
@@ -324,7 +324,7 @@ class PaymentController extends Controller
                 $logger->debug('Payment Status -- COMPLETE');
                 $order->status = 'paid';
                 break;
-            case self::SATUS_FAILED:
+            case self::STATUS_FAILED:
                 $logger->error('Payment Status -- FAILED');
                 $order->status = 'failed';
                 break;

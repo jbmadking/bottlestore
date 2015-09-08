@@ -64,6 +64,12 @@ Route::get(
 Route::post(
     'payment/notify', ['as' => 'payment.index', 'uses' => 'PaymentController@notify']
 );
+
+// Playing with the concept of invoices???
+Route::get(
+    'checkout/stamp/invoice/{invoice}', ['as' => 'checkout.stamp.invoice', 'uses' => 'CheckoutController@stampInvoice']
+);
+
 /**
  * Authentication
  */
@@ -78,12 +84,18 @@ Route::post(
 /**
  * User Routes
  */
+
+//Profile routes
 Route::get('/user/dashboard', 'User\DashboardController@index');
 Route::get('/user/profile', 'User\ProfileController@index');
+
+//Addresses routes
 Route::get('/user/addresses', 'User\AddressesController@index');
 Route::get('/user/addresses/add', 'User\AddressesController@create');
 Route::post('/user/addresses/save', 'User\AddressesController@store');
 
+//Orders routes
+Route::get('/user/orders', 'User\OrdersController@index');
 /**
  * Administrator Routes
  */

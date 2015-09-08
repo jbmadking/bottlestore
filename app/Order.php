@@ -56,16 +56,31 @@ class Order extends Model
         return $this->belongsTo('App\Address', 'billing_id', 'id');
     }
 
+    /**
+     *
+     */
     public function setInvoiceNoAttribute()
     {
         $this->attributes['invoice_no'] = $this->generateInvoiceNumber();
     }
 
+    /**
+     * @param $query
+     *
+     * @param $invoiceNumber
+     */
     public function scopeFindByInvoiceNumber($query, $invoiceNumber)
     {
         $query->where('invoice_no', '=', $invoiceNumber);
     }
 
+    /**
+     * @param $query
+     */
+    public function scopeNewOrder($query)
+    {
+        $query->where('status', '=', 'new');
+    }
 
     /**
      * Generates a unique invoice number

@@ -9,10 +9,9 @@
             <div class="col-md-8 col-md-offset-2">
 
                 <div class="row">
-                    <div class="col-md-12">
+                    <h3>Select from your saved Addresses</h3>
+                    <div class="col-md-8">
                         @if($addresses)
-                            <h4>Select from saved Addresses</h4>
-
                             {!! Form::open([
                                 'route' => 'checkout.payment',
                                 'method' => 'POST',
@@ -21,12 +20,12 @@
 
                             <div class="form-group">
                                 {!! Form::label('billing', 'Billing Address:', ['class' => 'control-label']) !!}
-                                {!! Form::select('billing', $addresses, ['class' => 'form-control']) !!}
+                                {!! Form::select('billing', $addresses, null, ['class' => 'form-control']) !!}
                             </div>
 
                             <div class="form-group">
                                 {!! Form::label('shipping', 'Shipping Address:', ['class' => 'control-label']) !!}
-                                {!! Form::select('shipping', $addresses, ['class' => 'form-control']) !!}
+                                {!! Form::select('shipping', $addresses, null, ['class' => 'form-control']) !!}
                             </div>
 
                             <div class="form-group">

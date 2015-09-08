@@ -25,43 +25,57 @@
         @endif
 
         {!! Form::model(
-            $category,
+            $client,
             [
                 'method' => 'PATCH',
-                'route' => ['admin.categories.update', $category->id],
+                'route' => ['admin.categories.update', $client->id],
                 'class' => 'form-horizontal'
             ]
             )
         !!}
 
-            @include('admin.categories.form', ['submitButtonText' => 'Update Category'])
+            @include('admin.clients.form', ['submitButtonText' => 'Update Client'])
 
         {!! Form::close() !!}
 
     </div>
 </div>
 <div class="row">
-    <div class="col-md-2">
-    </div>
-    <div class="col-md-10">
-        <h2>Child Categories</h2>
-        @if($category->children->count())
+
+    <div class="col-md-offset-2">
+        <h2>Client Orders</h2>
+        @if($client->orders->count())
             <table class="table table-bordered table-striped">
                 <thead>
                     <tr>
-                        <td>&nbsp;</td>
+                        <th>Invoice #</th>
+                        <th>Status</th>
+                        <th>Total</th>
+                        <th>Date Created</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach($category->children as $childCategory)
+
+                    @foreach($client->orders as $order)
                         <tr>
-                            <td>{{ $childCategory->name }}</td>
+                            <td>{{ $order->invoice_no }}</td>
+                            <td>
+                                    <span class="label
+                                     @if($order->status == 'unpaid')
+                                            label-danger
+                                     @else
+                                            label-success
+                                     @endif">{{ strtoupper($order->status) }}</span>
+                            </td>
+                            <td>{{ $order->total }}</td>
+                            <td>{{ $order->updated_at }}</td>
                         </tr>
                     @endforeach
+
                 </tbody>
             </table>
         @else
-            <h4>This category does not have any Child Categories Associated with it</h4>
+            <h4>This client does not have any orders yet.</h4>
         @endif
     </div>
 </div>

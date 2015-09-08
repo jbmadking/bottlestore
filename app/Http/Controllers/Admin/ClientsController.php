@@ -25,4 +25,14 @@ class ClientsController extends Controller
 
         return view('admin.clients.index', compact('users'));
     }
+
+    /**
+     * @return \Illuminate\View\View
+     */
+    public function edit($clientId)
+    {
+        $client = User::findOrFail($clientId);
+
+        return view('admin.clients.edit', compact('client'));
+    }
 }
