@@ -155,11 +155,14 @@ function quickPostPaymentToPayFast (payFastUrl) {
         url    : 'stamp/invoice/' + invoice_no,
         success: function (result) {
 
-            alert(invoice_no + ':' + result);
+            if (result === 'fail') {
+
+                alert('Update failed. Please let us know');
+            }
         },
         error  : function () {
 
-            alert('error returned');
+            alert('Server error!!!');
         }
     });
 

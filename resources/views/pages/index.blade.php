@@ -2,13 +2,7 @@
 
 @section('site_content')
 
-    <div class="row">
-        <div class="col-lg-12">
-            {!! $paginate->render() !!}
-        </div>
-    </div>
-
-    @foreach (array_chunk($products, 4) as $productsRow)
+    @foreach (array_chunk($products, 3) as $productsRow)
 
         <div id="portfolio" class="row">
 
