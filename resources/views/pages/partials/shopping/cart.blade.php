@@ -1,40 +1,64 @@
 <div class="col-md-12">
+    <div id="shopping-cart">
 
-    <div id="cart-notices"></div>
+        <div id="cart-notices"></div>
 
-    <ul>
-        <li class="row">
-            <span class="quantity"></span>
-            <span class="quantity">QTY</span>
-            <span class="itemName">ITEM</span>
-            <span class="price">Price</span>
-        </li>
+        <table class="table table-bordered table-striped">
+            <tr>
+                <th></th>
+                <th>#</th>
+                <th>ITEM</th>
+                <th width="25%">PRICE</th>
+            </tr>
 
-        @if(!empty($cartItems))
-            @foreach($cartItems as $item)
+            @if(!empty($cartItems))
 
-                <li class="row" id="product-{{ $item['id'] }}">
-                    <span class="btn-sm quantity delete-from-cart"
-                          item-id="{{ $item['rowid'] }}">X</span>
-                    <span class="quantity">{{ $item['qty'] }}</span>
-                    <span class="itemName">{{ $item['name'] }}</span>
-                    <span class="price">R {{ $item['price'] }}</span>
-                </li>
+                @foreach($cartItems as $item)
 
-            @endforeach
-        @else
-            <li class="row">Your Shopping Cart is Empty</li>
-        @endif
+                    <tr>
+                        <td>
+                            <span class="label label-danger delete-from-cart"
+                                  item-id="{{ $item['rowid'] }}"
+                                  id="product-{{ $item['id'] }}">X</span>
+                            <br/>
+                        </td>
+                        <td>{{ $item['qty'] }}</td>
+                        <td>{{ $item['name'] }}</td>
+                        <td align="right">R {{ $item['price'] }}</td>
+                    </tr>
 
-        <li class="row totals">
-            <span class="itemName quantity">Total:</span>
-            <span class="price itemName">R {{ $cartTotal }}</span>
-            <span class="order">
-                <a class="text-center" id="checkout" href="{{ route('checkout.index') }}">Checkout</a>
-            </span>
-        </li>
-    </ul>
+                @endforeach
+
+            @else
+                <tr>
+                    <td colspan="4">Your Shopping Cart is Empty</td>
+                </tr>
+            @endif
+
+            <tr align="right">
+                <td colspan="2">
+                    <a class="btn btn-success btn-sm" id="checkout"
+
+                       @if($checkoutAction === 'pickAddresses')
+                       href="{{ route('checkout.addresses') }}"
+                       @else
+                       href="{{ route('checkout.index') }}"
+                            @endif
+                            >
+                        @if($checkoutAction === 'pickAddresses')
+                            Proceed to Checkout
+                        @else
+                            Checkout
+                        @endif
+                    </a>
+                </td>
+                <td>Total:</td>
+                <td>R {{ $cartTotal }}</td>
+            </tr>
+        </table>
+    </div>
 </div>
+
 <script>
     $(document).ready(
             $('.delete-from-cart').click(function () {

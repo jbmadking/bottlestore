@@ -17,7 +17,7 @@ class PagesController extends Controller
      */
     public function home()
     {
-        $categories = Category::get()->sortBy('name');
+        $rootCategories = Category::rootCategories()->get()->sortBy('name');
         $paginate = Product::paginate(12);
         $products = $paginate->items();
         $cartTotal = 0;
@@ -25,7 +25,7 @@ class PagesController extends Controller
         return view(
             'pages.index',
             compact(
-                'categories',
+                'rootCategories',
                 'products',
                 'paginate',
                 'cartTotal'
@@ -66,11 +66,11 @@ class PagesController extends Controller
     {
         $category = Category::findBySlug($slug);
 
-        $categories = Category::get()->sortBy('name');
+        $rootCategories = Category::rootCategories()->get()->sortBy('name');
 
         $products = $category->products->toArray();
 
-        return view('pages.category.show', compact('category', 'products', 'categories'));
+        return view('pages.category.show', compact('category', 'products', 'rootCategories'));
     }
 
     /**
@@ -84,7 +84,7 @@ class PagesController extends Controller
     {
         $categories = Category::get()->sortBy('name');
 
-        $paginate= Product::paginate(6);
+        $paginate = Product::paginate(6);
 
         $products = $paginate->items();
 

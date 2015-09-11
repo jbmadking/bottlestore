@@ -14,16 +14,15 @@
 
         <div class="col-md-10">
 
-            <table class="table table-striped table-bordered table-hover">
+            <table class="table table-striped table-bordered">
                 <thead>
                 <tr>
                     <th>Invoice #</th>
-                    <th>Billing Address</th>
-                    <th>Shipping Address</th>
+                    <th>Address</th>
                     <th>Status</th>
                     <th>Total</th>
-                    <th>Date Created</th>
-                    <th>Actions</th>
+                    <th width="20%">Date</th>
+                    <th width="10%">Actions</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -33,29 +32,26 @@
                         @foreach($orders as $order)
                             <tr>
                                 <td>{{ $order->invoice_no }}</td>
-                                <td>
-                                    {{ $order->billingAddress->street_number }}
-                                    {{ $order->billingAddress->street_name }}
-                                </td>
-                                <td>
-                                    {{ $order->shippingAddress->street_number }}
-                                    {{ $order->shippingAddress->street_name }}
-                                </td>
+                                <td>{{ $order->billingAddress->street_number }}</td>
                                 <td>
                                     <span class="label
                                      @if($order->status == 'unpaid')
                                             label-danger
-                                     @else
+                                     @elseif($order->status == 'new')
                                             label-success
+                                    @elseif($order->status == 'paid')
+                                            label-primary
                                      @endif">{{ strtoupper($order->status) }}</span>
                                 </td>
                                 <td>{{ $order->total }}</td>
-                                <td>{{ $order->updated_at }}</td>
+                                <td>{{ date_format($order->updated_at, 'D m Y H:i:s') }}</td>
                                 <td>
                                     @if($order->status == 'unpaid')
-                                        <button class="btn btn-sm btn-warning">Pay Now</button>
-                                    @else
-                                        <button class="btn btn-sm btn-success">View Payment</button>
+                                        <button class="btn btn-sm btn-danger">Pay Order</button>
+                                    @elseif($order->status == 'new')
+                                        <button class="btn btn-sm btn-success">View Order</button>
+                                    @elseif($order->status == 'paid')
+                                        <button class="btn btn-sm btn-primary">View Payment</button>
                                     @endif
                                 </td>
                             </tr>

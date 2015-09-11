@@ -6,8 +6,8 @@ $I->wantTo('Edit an Existing Product');
 $I->amLoggedAs($I->aSiteAdministrator());
 $I->amOnPage('/admin/products');
 
-$I->click('Carling Black Label Case');
-$I->seeCurrentUrlEquals('/admin/products/1/edit');
+$I->click('Carling Black Label 6 Pack');
+$I->seeCurrentUrlEquals('/admin/products/44/edit');
 
 $category = \App\Category::get()->toArray();
 
@@ -21,7 +21,7 @@ $I->selectOption('status', '1');
 $I->attachFile('image', 'roundrect8537796.gif');
 
 $I->click('Update Product');
-$I->seeCurrentUrlEquals('/admin/products/1');
+$I->seeCurrentUrlEquals('/admin/products/44');
 
 //$I->see('New Product: Malt Liquor Created');
 

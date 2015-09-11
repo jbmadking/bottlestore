@@ -76,10 +76,10 @@ Route::get(
 
 //Overrides
 Route::get(
-    '/register/user', ['as' => 'user.register', 'uses' => 'Auth\AuthController@getRegister',]
+    '/register/user', ['as' => 'user.register', 'uses' => 'Auth\AuthController@getRegister']
 );
 Route::post(
-    '/register/user', ['as' => 'user.register', 'uses' => 'Auth\AuthController@postRegister',]
+    '/register/user', ['as' => 'user.register', 'uses' => 'Auth\AuthController@postRegister']
 );
 /**
  * User Routes
@@ -99,6 +99,8 @@ Route::get('/user/orders', 'User\OrdersController@index');
 /**
  * Administrator Routes
  */
+Route::get('/admin/import/index', ['as' => 'admin.import.index', 'uses' => 'Admin\ImportController@index']);
+Route::post('/admin/import/run', ['as' => 'admin.import.run', 'uses' => 'Admin\ImportController@run']);
 
 Route::resource('admin/categories', 'Admin\CategoriesController');
 Route::resource('admin/products', 'Admin\ProductsController');
@@ -110,5 +112,5 @@ Route::controller('admin', 'Admin\UsersController');
  * Auth Routes
  */
 Route::controllers(
-    ['auth' => 'Auth\AuthController', 'password' => 'Auth\PasswordController',]
+    ['auth' => 'Auth\AuthController', 'password' => 'Auth\PasswordController']
 );

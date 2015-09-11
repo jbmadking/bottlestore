@@ -5,7 +5,7 @@ $I->wantTo('View Products that belong to a specific Category');
 
 $I->amOnPage('/');
 
-$I->click('Beer');
+$I->click('Local Beer');
 
 $I->seeInCurrentUrl('/category/');
 

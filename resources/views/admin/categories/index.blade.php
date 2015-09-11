@@ -36,7 +36,7 @@
                         <th>Parent Category</th>
                         <th width="6%">Views</th>
                         <th width="6%">Status</th>
-                        <th width="20%">Created</th>
+                        <th width="20%">Products</th>
                         <th width="20%">Modified</th>
                     </tr>
                 </thead>
@@ -67,7 +67,7 @@
                             </td>
                             <td>{{ $category->status }}</td>
                             <td>{{ $category->views }}</td>
-                            <td>{{ $category->created_at }}</td>
+                            <td>{{ count($category->products) }}</td>
                             <td>{{ $category->updated_at }}</td>
                         </tr>
                     @endforeach

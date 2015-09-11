@@ -64,4 +64,9 @@ class Category extends Model
         return Category::where('slug', $slug)->first();
     }
 
+    public function scopeRootCategories($query)
+    {
+        $query->where('parent_id', '=', 0);
+    }
+
 }

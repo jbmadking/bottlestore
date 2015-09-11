@@ -2,7 +2,12 @@
 
 @section('site_content')
 
-    @foreach (array_chunk($products, 3) as $productsRow)
+    <div class="row">
+        <div class="col-md-12">
+            @include('pages.partials.category.menu')
+        </div>
+    </div>
+    @foreach (array_chunk($products, 4) as $productsRow)
 
         <div id="portfolio" class="row">
 

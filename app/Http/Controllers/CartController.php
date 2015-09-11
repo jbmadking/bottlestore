@@ -59,7 +59,9 @@ class CartController extends Controller
 
         $cartTotal = Cart::total();
 
-        return view('pages.partials.shopping.cart', compact('cartItems', 'cartTotal'));
+        $checkoutAction = 'editCart';
+
+        return view('pages.partials.shopping.cart', compact('cartItems', 'cartTotal', 'checkoutAction'));
     }
 
 }

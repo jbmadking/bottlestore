@@ -1,7 +1,11 @@
 @extends('pages.site')
 
 @section('site_content')
-
+    <div class="row">
+        <div class="col-lg-9">
+            @include('pages.partials.category.menu')
+        </div>
+    </div>
     <div class="row">
         <h1>{{ $category->name }} Category</h1>
 
