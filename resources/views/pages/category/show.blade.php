@@ -27,4 +27,10 @@
 
         </div>
     </div>
+
+    <div class="row">
+        <div class="col-lg-12">
+            {!! $paginate->render() !!}
+        </div>
+    </div>
 @stop

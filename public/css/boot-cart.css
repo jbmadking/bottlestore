@@ -4,7 +4,20 @@
     font-size: 11px;
 }
 
-#shopping-cart table tr th{
+#shopping-cart table tr th {
     background-color: #2e6da4;
-    color: #fff;
+    color: #ffffff;
+}
+
+.grid-item-image {
+    min-height: 126px;
+    margin-top: 20px;
+}
+
+.grid-item-info {
+    min-height: 80px;
+}
+
+.grid-item-name{
+    min-height: 40px;
 }

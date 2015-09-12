@@ -10,11 +10,11 @@
     </div>
     <div class="row grid-item-info">
 
-        <div class="col-md-12">
-            <strong class="">{{ $product['name'] }}</strong>
+        <div class="col-md-12 grid-item-name">
+            <strong class="small">{{ $product['name'] }}</strong>
         </div>
 
-        <div class="col-md-12">
+        <div class="col-md-12 grid-item-price">
             <h4>R{{ $product['price'] }}</h4>
         </div>
 
