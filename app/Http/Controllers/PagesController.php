@@ -1,10 +1,8 @@
 <?php namespace App\Http\Controllers;
 
-use App\Category;
-use App\Product;
+use App\Repositories\Category;
+use App\Repositories\Product;
 use App\Http\Requests;
-use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
 class PagesController extends Controller

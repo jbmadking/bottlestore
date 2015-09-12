@@ -1,7 +1,7 @@
 <?php 
 $I = new AcceptanceTester($scenario);
 $I->am('Registered User');
-$I->wantTo('View my Odrers');
+$I->wantTo('View my Orders');
 
 $I->amLoggedAs($I->siteUser());
 

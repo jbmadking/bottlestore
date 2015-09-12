@@ -81,6 +81,15 @@ Route::get(
 Route::post(
     '/register/user', ['as' => 'user.register', 'uses' => 'Auth\AuthController@postRegister']
 );
+
+//Socialite
+Route::get(
+    '/socialite/login', ['as' => 'socialite.login', 'uses' => 'SocialiteController@login']
+);
+Route::get(
+    '/socialite/authorise', ['as' => 'socialite.authorise', 'uses' => 'SocialiteController@oAuthorise']
+);
+
 /**
  * User Routes
  */

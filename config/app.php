@@ -138,6 +138,7 @@ return [
         'Laracasts\Commander\CommanderServiceProvider',
         'Laracasts\Flash\FlashServiceProvider',
         'Illuminate\Html\HtmlServiceProvider',
+        'Laravel\Socialite\SocialiteServiceProvider',
         'Gloudemans\Shoppingcart\ShoppingcartServiceProvider',
 
         /*
@@ -199,7 +200,8 @@ return [
         'Flash' => 'Laracasts\Flash\Flash',
         'Form' => 'Illuminate\Html\FormFacade',
         'Html' => 'Illuminate\Html\HtmlFacade',
-        'Cart' => 'Gloudemans\Shoppingcart\Facades\Cart'
+        'Socialite' => 'Laravel\Socialite\Facades\Socialite',
+        'Cart' => 'Gloudemans\Shoppingcart\Facades\Cart',
     ],
 
 ];

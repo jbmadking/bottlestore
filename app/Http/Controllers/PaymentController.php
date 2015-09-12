@@ -1,8 +1,8 @@
 <?php namespace App\Http\Controllers;
 
 use App\Http\Requests;
-use App\Order;
-use App\Transaction;
+use App\Repositories\Order;
+use App\Repositories\Transaction;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Log\Writer;

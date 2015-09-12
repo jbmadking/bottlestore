@@ -73,11 +73,14 @@ class CheckoutController extends Controller
     }
 
     /**
-     * @return RedirectResponse|Redirector
+     * @param Request       $request
+     * @param Authenticator $auth
+     *
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
-    public function authenticate()
+    public function authenticate(Request $request, Authenticator $auth)
     {
-        $userLoggedIn = $this->dispatch(new LoginSiteUser);
+        $userLoggedIn = $this->dispatch(new LoginSiteUser($request, $auth));
 
         if (!$userLoggedIn) {
 
@@ -115,7 +118,9 @@ class CheckoutController extends Controller
     public function saveAddress(Request $request)
     {
 
-        $this->dispatch(new SaveUserAddresses($request));
+        $billingAddress = $request->get('billing');
+
+        $this->dispatch(new SaveUserAddresses($billingAddress));
 
         return $this->render();
     }

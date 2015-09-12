@@ -3,7 +3,6 @@
 use App\Events\ProductAddedToShoppingCart;
 use Gloudemans\Shoppingcart\Facades\Cart;
 use Illuminate\Contracts\Bus\SelfHandling;
-use Illuminate\Http\Request;
 
 class AddProductToShoppingCart extends Command implements SelfHandling
 {
@@ -32,7 +31,7 @@ class AddProductToShoppingCart extends Command implements SelfHandling
     {
         try {
 
-            $cart = Cart::associate('Product', 'App');
+            $cart = Cart::associate('Product', 'App\Repositories');
 
             $cart->add(
                 $this->product['id'],

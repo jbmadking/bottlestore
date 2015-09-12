@@ -1,4 +1,4 @@
-<?php namespace App;
+<?php namespace App\Repositories;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -23,7 +23,7 @@ class Order extends Model
      */
     public function orderItems()
     {
-        return $this->hasMany('App\OrderItem');
+        return $this->hasMany('App\Repositories\OrderItem');
     }
 
     /**
@@ -33,7 +33,7 @@ class Order extends Model
      */
     public function user()
     {
-        return $this->belongsTo('App\User');
+        return $this->belongsTo('App\Repositories\User');
     }
 
     /**
@@ -43,7 +43,7 @@ class Order extends Model
      */
     public function shippingAddress()
     {
-        return $this->belongsTo('App\Address', 'shipping_id', 'id');
+        return $this->belongsTo('App\Repositories\Address', 'shipping_id', 'id');
     }
 
     /**
@@ -53,7 +53,7 @@ class Order extends Model
      */
     public function billingAddress()
     {
-        return $this->belongsTo('App\Address', 'billing_id', 'id');
+        return $this->belongsTo('App\Repositories\Address', 'billing_id', 'id');
     }
 
     /**

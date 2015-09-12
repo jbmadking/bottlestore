@@ -1,4 +1,4 @@
-<?php namespace App;
+<?php namespace App\Repositories;
 
 use Illuminate\Database\Eloquent\Model;
 
@@ -33,7 +33,7 @@ class Address extends Model
      */
     public function user()
     {
-        return $this->belongsToMany('App\User');
+        return $this->belongsToMany('App\Repositories\User');
     }
 
 

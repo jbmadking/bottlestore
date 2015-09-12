@@ -13,7 +13,7 @@ $I->click('Beer');
 
 $I->seeCurrentUrlEquals('/admin/categories/1/edit');
 
-$category = \App\Category::get()->toArray();
+$category = \App\Repositories\Category::get()->toArray();
 
 $I->selectOption('parent_id', $category[2]['id']);
 

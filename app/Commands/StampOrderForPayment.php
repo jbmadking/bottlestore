@@ -1,8 +1,7 @@
 <?php namespace App\Commands;
 
-use App\Order;
+use App\Repositories\Order;
 use Illuminate\Contracts\Bus\SelfHandling;
-use Illuminate\Http\Request;
 
 class StampOrderForPayment extends Command implements SelfHandling
 {

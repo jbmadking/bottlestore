@@ -1,14 +1,12 @@
 <?php namespace App\Commands;
 
-use App\Product;
+use App\Repositories\Product;
 use Illuminate\Contracts\Bus\SelfHandling;
 use \Goutte\Client as GoutteClient;
 use Illuminate\Http\Request;
 
 class BulkImportProductsPage extends Command implements SelfHandling
 {
-
-
     const BASE_URL = 'http://www.bottleshop.co.za';
     protected $categories;
 

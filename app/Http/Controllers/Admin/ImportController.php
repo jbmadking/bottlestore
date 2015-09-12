@@ -1,10 +1,9 @@
 <?php namespace App\Http\Controllers\Admin;
 
-use App\Category;
 use App\Commands\BulkImportProductsPage;
+use App\Repositories\Category;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
-
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 

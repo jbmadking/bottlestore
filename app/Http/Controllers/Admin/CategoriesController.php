@@ -1,8 +1,8 @@
 <?php namespace App\Http\Controllers\Admin;
 
-use App\Category;
 use App\Http\Controllers\Controller;
 use App\Http\Requests;
+use App\Repositories\Category;
 use App\Http\Requests\CategoryRequest;
 use Illuminate\Http\Response;
 

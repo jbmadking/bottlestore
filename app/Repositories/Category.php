@@ -1,4 +1,4 @@
-<?php namespace App;
+<?php namespace App\Repositories;
 
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
@@ -15,7 +15,7 @@ class Category extends Model
      */
     public function products()
     {
-        return $this->belongsToMany('App\Product');
+        return $this->belongsToMany('App\Repositories\Product');
     }
 
     /**
@@ -23,7 +23,7 @@ class Category extends Model
      */
     public function parent()
     {
-        return $this->belongsTo('App\Category');
+        return $this->belongsTo('App\Repositories\Category');
     }
 
     /**
@@ -31,7 +31,7 @@ class Category extends Model
      */
     public function children()
     {
-        return $this->hasMany('App\Category', 'parent_id');
+        return $this->hasMany('App\Repositories\Category', 'parent_id');
     }
 
     /**

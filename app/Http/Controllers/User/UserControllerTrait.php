@@ -1,6 +1,6 @@
 <?php
 
-namespace app\Http\Controllers\User;
+namespace App\Http\Controllers\User;
 
 
 trait UserControllerTrait

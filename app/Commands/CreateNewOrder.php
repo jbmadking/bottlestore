@@ -1,10 +1,10 @@
 <?php namespace App\Commands;
 
 use App\Events\NewCustomerOrderCreated;
-use App\Order;
-use App\OrderItem;
-
+use App\Repositories\Order;
+use App\Repositories\OrderItem;
 use Gloudemans\Shoppingcart\Facades\Cart;
+
 use Illuminate\Contracts\Bus\SelfHandling;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -35,8 +35,6 @@ class CreateNewOrder extends Command implements SelfHandling
     public function __construct()
     {
         $this->session = new Session();
-
-        $this->order = new Order();
     }
 
     /**

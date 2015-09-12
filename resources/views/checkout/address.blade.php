@@ -9,9 +9,9 @@
             <div class="col-md-8 col-md-offset-2">
 
                 <div class="row">
-                    <h3>Select from your saved Addresses</h3>
-                    <div class="col-md-8">
-                        @if($addresses)
+                    <div class="col-md-6">
+                        <h3>Select from your saved Addresses</h3>
+                    @if($addresses)
                             {!! Form::open([
                                 'route' => 'checkout.payment',
                                 'method' => 'POST',
@@ -35,15 +35,23 @@
                             @else
                                     <h3 class="center-announcement">No Addresses saved Yet!!!</h3>
                             @endif
-                    </div>
-                    <div class="row">
-                        <div class="col-md-12">
-                            <h3>Or enter your address details below</h3>
-                            @include('checkout.forms.addresses')
                         </div>
-                    </div>
-                </div>
+                    <div class="col-lg-6">
+                        <h3>Or enter your address details below</h3>
+                        @include(
+                        'checkout.forms.address',
+                        [
+                        'addressType' => 'billing',
+                        'submitButtonText' => 'Add Billing Address',
+                        ])
 
+                    </div>
+                    {{--<div class="row">--}}
+                        {{--<div class="col-md-12">--}}
+                            {{--@include('checkout.forms.addresses')--}}
+                        {{--</div>--}}
+                    {{--</div>--}}
+                </div>
             </div>
         </div>
     </div>

@@ -3,13 +3,17 @@
 use App\Events\ProductRemovedFromShoppingCart;
 use Gloudemans\Shoppingcart\Facades\Cart;
 use Illuminate\Contracts\Bus\SelfHandling;
-use Illuminate\Http\Request;
 
+/**
+ * Class RemoveProductFromShoppingCart
+ *
+ * @package App\Commands
+ */
 class RemoveProductFromShoppingCart extends Command implements SelfHandling
 {
 
     /**
-     *
+     * @var
      */
     protected $productId;
 

@@ -2,21 +2,28 @@
 
 use App\Events\NewUserAddressAdded;
 use Illuminate\Contracts\Bus\SelfHandling;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
+/**
+ * Class SaveUserAddresses
+ *
+ * @package App\Commands
+ */
 class SaveUserAddresses extends Command implements SelfHandling
 {
-    protected $request;
+    /**
+     * @var
+     */
+    protected $billingAddress;
 
     /**
      * Create a new command instance.
      *
-     * @param Request $request
+     * @param $billingAddress
      */
-    public function __construct(Request $request)
+    public function __construct($billingAddress)
     {
-        $this->request = $request;
+        $this->billingAddress = $billingAddress;
     }
 
     /**
@@ -25,18 +32,13 @@ class SaveUserAddresses extends Command implements SelfHandling
      */
     public function handle()
     {
-        $shippingAddress = array_filter($this->request->get('shipping'));
-        $billingAddress = array_filter($this->request->get('billing'));
+        $billingAddress = array_filter($this->billingAddress);
 
         if (!empty($billingAddress)) {
-            Auth::user()->addresses()->create($this->request->get('billing'));
-        }
 
-        if (!empty($shippingAddress)) {
-            Auth::user()->addresses()->create($this->request->get('shipping'));
+            Auth::user()->addresses()->create($this->request->get('billing'));
         }
 
         event(new NewUserAddressAdded());
     }
-
 }

@@ -10,7 +10,7 @@ $I->amOnPage('/admin/products');
 $I->click('Add Product');
 $I->seeCurrentUrlEquals('/admin/products/create');
 
-$category = \App\Category::get()->toArray();
+$category = \App\Repositories\Category::get()->toArray();
 
 $I->selectOption('category', $category[0]['id']);
 $I->fillField('name', 'Malt Liquor');

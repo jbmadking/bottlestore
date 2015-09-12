@@ -1,4 +1,4 @@
-<?php namespace App;
+<?php namespace App\Repositories;
 
 use Illuminate\Auth\Authenticatable;
 use Illuminate\Database\Eloquent\Model;
@@ -59,7 +59,7 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
      */
     public function addresses()
     {
-        return $this->belongsToMany('App\Address', 'user_addresses');
+        return $this->belongsToMany('App\Repositories\Address', 'user_addresses');
     }
 
     /**
@@ -69,7 +69,7 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
      */
     public function orders()
     {
-        return $this->hasMany('App\Order');
+        return $this->hasMany('App\Repositories\Order');
     }
 
 }

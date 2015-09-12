@@ -19,8 +19,14 @@ $I->click('Proceed to Checkout');
 
 $I->seeCurrentUrlEquals('/checkout/addresses');
 
-$I->fillInBillingAddress();
-$I->fillInShippingAddress();
+$I->fillField('billing[street_number]', '36');
+$I->fillField('billing[street_name]', 'McGhie Avenue');
+$I->fillField('billing[suburb]', 'Rhodene');
+$I->fillField('billing[city]', 'Masvingo');
+$I->fillField('billing[province]', 'Masvingo');
+$I->fillField('billing[postal_code]', '9999');
+//$I->fillInBillingAddress();
+//$I->fillInShippingAddress();
 
 $I->click('Add Billing Address');
 

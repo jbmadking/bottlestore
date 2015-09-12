@@ -9,7 +9,7 @@ $I->amOnPage('/admin/products');
 $I->click('Carling Black Label 6 Pack');
 $I->seeCurrentUrlEquals('/admin/products/44/edit');
 
-$category = \App\Category::get()->toArray();
+$category = \App\Repositories\Category::get()->toArray();
 
 $I->selectOption('category', $category[1]['id']);
 $I->fillField('name', 'Malt Liquors');

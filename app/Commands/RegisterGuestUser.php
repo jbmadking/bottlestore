@@ -1,7 +1,7 @@
 <?php namespace App\Commands;
 
 use App\Http\Requests\UserRequest;
-use App\User;
+use App\Repositories\User;
 use Illuminate\Contracts\Bus\SelfHandling;
 use Illuminate\Auth\Guard as Authenticator;
 
@@ -21,6 +21,8 @@ class RegisterGuestUser extends Command implements SelfHandling
      * Execute the command.
      *
      * @param UserRequest $request
+     *
+     * @return string|static
      */
     public function handle(UserRequest $request)
     {
@@ -30,8 +32,11 @@ class RegisterGuestUser extends Command implements SelfHandling
 
             $this->auth->login($user);
 
+            return $user;
+
         } catch (Exception $e) {
 
+            return $e->getMessage();
         }
 
     }

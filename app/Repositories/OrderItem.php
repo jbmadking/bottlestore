@@ -1,4 +1,4 @@
-<?php namespace App;
+<?php namespace App\Repositories;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -14,7 +14,7 @@ class OrderItem extends Model {
      */
     public function order()
     {
-        return $this->belongsTo('App\Order');
+        return $this->belongsTo('App\Repositories\Order');
     }
 
 

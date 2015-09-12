@@ -1,4 +1,4 @@
-<?php namespace App;
+<?php namespace App\Repositories;
 
 use Illuminate\Database\Eloquent\Model;
 
@@ -26,7 +26,7 @@ class Product extends Model
      */
     public function category()
     {
-        return $this->belongsToMany('App\Category');
+        return $this->belongsToMany('App\Repositories\Category');
     }
 
     public function scopeFindByName($query, $product)
