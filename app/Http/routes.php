@@ -84,10 +84,10 @@ Route::post(
 
 //Socialite
 Route::get(
-    '/socialite/login', ['as' => 'socialite.login', 'uses' => 'SocialiteController@login']
+    '/socialite/login/{provider}', ['as' => 'socialite.login', 'uses' => 'SocialiteController@login']
 );
 Route::get(
-    '/socialite/authorise', ['as' => 'socialite.authorise', 'uses' => 'SocialiteController@oAuthorise']
+    '/socialite/authorise/{provider}', ['as' => 'socialite.authorise', 'uses' => 'SocialiteController@oAuthorise']
 );
 
 /**

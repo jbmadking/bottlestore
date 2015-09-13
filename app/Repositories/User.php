@@ -6,6 +6,11 @@ use Illuminate\Auth\Passwords\CanResetPassword;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
 
+/**
+ * Class User
+ *
+ * @package App\Repositories
+ */
 class User extends Model implements AuthenticatableContract, CanResetPasswordContract
 {
 
@@ -32,11 +37,17 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
      */
     protected $hidden = ['password', 'remember_token'];
 
+    /**
+     * @param $query
+     */
     public function scopeIsAdmin($query)
     {
         $query->where('is_admin', '=', true);
     }
 
+    /**
+     * @param $query
+     */
     public function scopeIsClient($query)
     {
         $query->where('is_admin', '=', false);
@@ -72,4 +83,18 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
         return $this->hasMany('App\Repositories\Order');
     }
 
+    /**
+     * @param $userInfo
+     *
+     * @return static
+     */
+    public static function findByUserNameOrCreate($userInfo)
+    {
+        return User::firstOrCreate(
+            [
+                'name' => $userInfo->name,
+                'email' => $userInfo->email,
+            ]
+        );
+    }
 }
