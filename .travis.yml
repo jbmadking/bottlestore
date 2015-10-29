@@ -23,6 +23,7 @@ before_script:
 
 script:
   - composer install
+  - php artisan migrate:install
   - php artisan migrate -n
   - vendor/bin/codecept run acceptance
 
