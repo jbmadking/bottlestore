@@ -19,10 +19,11 @@ mysql:
 
 before_script:
   - mysql -e 'create database `skills-app`;'
-  - php artisan migrate --force
+
 
 script:
   - composer install
+  - php artisan migrate --force
   - vendor/bin/codecept run acceptance
 
 notifications:
