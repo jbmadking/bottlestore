@@ -4,3 +4,4 @@
 public/images
 tests/_output/*
 tests/_data/*
+.idea/workspace.xml
