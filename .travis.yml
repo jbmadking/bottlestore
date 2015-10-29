@@ -18,7 +18,7 @@ mysql:
   encoding: utf8
 
 before_script:
-  - mysql -e 'create database skills-app;'
+  - mysql -e 'create database `skills-app`;'
 
 script:
   - composer install
