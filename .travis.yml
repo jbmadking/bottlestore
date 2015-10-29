@@ -19,12 +19,15 @@ mysql:
 
 before_script:
   - mysql -e 'create database `skills-app`;'
+  - mysql -e 'CREATE TABLE IF NOT EXISTS `users` (   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,   `name` varchar(255) COLLATE utf8_unicode_ci NOT NULL,   `email` varchar(255) COLLATE utf8_unicode_ci NOT NULL,   `password` varchar(60) COLLATE utf8_unicode_ci NOT NULL,   `remember_token` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,   `created_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',   `updated_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',   `is_admin` tinyint(1) NOT NULL,   `username` varchar(255) COLLATE utf8_unicode_ci NOT NULL,   PRIMARY KEY (`id`),   UNIQUE KEY `users_email_unique` (`email`),   KEY `users_username_index` (`username`) ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;'
+  - mysql -e 'INSERT INTO `users` (`name`, `email`, `password`, `remember_token`, `created_at`, `updated_at`, `is_admin`, `username`) VALUES ('Joshua Matikinye', 'jbmatikinye@gmail.com', '$2y$10$qJz15oXLh65sFVHC9KChkeuBaZLauVY/HjD5lSOncSlGZzG5VjcNe', 'j26SrR2lk5Fl5zSFSpjBVpgj2jaRxWEdVBQXrXB7QMUUVA2cMo33K3g40lt8', '2015-08-30 21:27:34', '2015-10-16 19:38:05', 0, '');'
+  - mysql -e 'INSERT INTO `users` (`name`, `email`, `password`, `remember_token`, `created_at`, `updated_at`, `is_admin`, `username`) VALUES ('Bradshaw Matikinye', 'joshua@matikinye.com', '$2y$10$EFX1sGEGZQTswz4W8eKX8OaNZpofOvIE9I4.AzTCPtQIeCOQj96c2', 'BB1kT3FmXdfpcyvBzKXE62wBjin7hbXOuY9keKVBncyRyfYZp40PPXaJVUkm', '2015-08-30 21:32:26', '2015-09-11 22:05:29', 1, '');'
+  - mysql -e 'INSERT INTO `users` (`name`, `email`, `password`, `remember_token`, `created_at`, `updated_at`, `is_admin`, `username`) VALUES ('Lindsay Matikinye', 'lindsay@matikinye.co.za', '$2y$10$pUc7SB3.ccDr/wenG6nRSee6oO11r7eHyQG0M8g2THbPUeuD6G90O', 'RpJY9Wi0Y7UJCHsJaO5KA6eQavlvhgRlkWab0okLIcJpCnB2ZMqgKInmquFM', '2015-09-06 19:30:29', '2015-09-10 23:05:40', 0, '');'
 
 
 script:
   - composer install
-  - php artisan migrate:install
-  - php artisan migrate -n
+  - php artisan migrate
   - vendor/bin/codecept run acceptance
 
 notifications:
