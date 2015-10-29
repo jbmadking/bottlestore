@@ -19,6 +19,7 @@ mysql:
 
 before_script:
   - mysql -e 'create database `skills-app`;'
+  - php artisan migrate --force
 
 script:
   - composer install
