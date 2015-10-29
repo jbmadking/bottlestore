@@ -9,6 +9,7 @@ env:
   - DB=mysql
 
 script:
+  - composer install
   - vendor/bin/codecept run acceptance
 
 notifications:
