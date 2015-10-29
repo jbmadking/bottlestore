@@ -12,6 +12,8 @@ services:
 env:
   - DB=mysql
 
+  before_script:
+  - mysql -e 'create database skills-app;'
 script:
   - composer install
   - vendor/bin/codecept run acceptance

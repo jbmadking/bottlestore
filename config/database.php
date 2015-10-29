@@ -55,7 +55,7 @@ return [
 		'mysql' => [
 			'driver'    => 'mysql',
 			'host'      => env('DB_HOST', 'localhost'),
-			'database'  => env('DB_DATABASE', 'travis'),
+			'database'  => env('DB_DATABASE', 'skills-app'),
 			'username'  => env('DB_USERNAME', 'travis'),
 			'password'  => env('DB_PASSWORD', ''),
 			'charset'   => 'utf8',
