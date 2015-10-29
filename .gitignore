@@ -3,3 +3,4 @@
 .env
 public/images
 tests/_output/*
+tests/_data/*
