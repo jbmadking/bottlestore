@@ -48,4 +48,22 @@ class SiteUser extends \AcceptanceTester
         $I->click('register_user');
     }
 
+    public function proceedToPayment($userAddresses)
+    {
+        $I = $this;
+
+        $I->seeCurrentUrlEquals('/checkout/addresses');
+        $I->fillInBillingAddress();
+        $I->click('Add Address');
+
+        $I->seeCurrentUrlEquals('/checkout/addresses/save');
+
+        if(!empty($userAddresses)){
+            $I->selectOption('billing', $userAddresses[0]['id']);
+        }
+
+        $I->click('Proceed to Payment');
+        $I->seeCurrentUrlEquals('/checkout/payment');
+    }
+
 }

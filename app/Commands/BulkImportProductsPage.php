@@ -29,6 +29,8 @@ class BulkImportProductsPage extends Command implements SelfHandling
     {
         $client = new GoutteClient();
         $slug = $request->input('slug');
+        $categories = $request->input('categories');
+
         $crawler = $client->request('GET', self::BASE_URL . '/' . $slug);
         $products = $this->getProducts($crawler);
 
@@ -47,12 +49,10 @@ class BulkImportProductsPage extends Command implements SelfHandling
                     ]
                 );
 
-                foreach ($request->input('categories') as $category) {
-
+                foreach ($categories as $category) {
                     $product->category()->attach($category);
                 }
             }
-
         }
     }
 

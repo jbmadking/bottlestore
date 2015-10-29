@@ -1,7 +1,7 @@
 <?php 
 $I = new AcceptanceTester($scenario);
 $I->am('Site User');
-$I->wantTo('Access the admin section');
+$I->wantTo('Be restricted from the Administrator\'s section');
 
 $I->amLoggedAs($I->siteUser());
 

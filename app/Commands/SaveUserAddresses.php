@@ -36,7 +36,7 @@ class SaveUserAddresses extends Command implements SelfHandling
 
         if (!empty($billingAddress)) {
 
-            Auth::user()->addresses()->create($this->request->get('billing'));
+            Auth::user()->addresses()->create($billingAddress);
         }
 
         event(new NewUserAddressAdded());

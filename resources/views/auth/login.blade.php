@@ -25,4 +25,20 @@
             </div>
         </div>
     </div>
+    <div class="row">
+        <ul>
+            <li>
+                <a href="{{ url('socialite/login/facebook') }}">Facebook</a>
+            </li>
+            <li>
+                <a href="{{ url('socialite/login/google') }}">Google Plus</a>
+            </li>
+            <li>
+                <a href="{{ url('socialite/login/twitter') }}">Twitter</a>
+            </li>
+            <li>
+                <a href="{{ url('socialite/login/linkedin') }}">LinkedIn</a>
+            </li>
+        </ul>
+    </div>
 @endsection

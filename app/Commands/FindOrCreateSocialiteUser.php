@@ -23,7 +23,7 @@ class FindOrCreateSocialiteUser extends Command implements SelfHandling
     protected $allowedProviders = [
         'github',
         'linkedin',
-        'googleplus',
+        'google',
         'facebook',
         'twitter'
     ];

@@ -1,13 +1,11 @@
 <?php namespace App\Http\Controllers;
 
-
 use App\Commands\CreateNewOrder;
 use App\Commands\LoginSiteUser;
 use App\Commands\RegisterGuestUser;
 use App\Commands\SaveUserAddresses;
 use App\Commands\StampOrderForPayment;
 use Gloudemans\Shoppingcart\Facades\Cart;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Redirector;
@@ -76,7 +74,7 @@ class CheckoutController extends Controller
      * @param Request       $request
      * @param Authenticator $auth
      *
-     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     * @return Redirector
      */
     public function authenticate(Request $request, Authenticator $auth)
     {

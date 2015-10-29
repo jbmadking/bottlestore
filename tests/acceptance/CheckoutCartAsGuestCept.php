@@ -3,8 +3,8 @@ use Step\Acceptance\SiteUser;
 
 $I = new SiteUser($scenario);
 
-$I->am('Unregistered User');
-$I->wantTo('Check out cart as a Guest user');
+$I->am('Guest User');
+$I->wantTo('Check out my shopping cart as a Guest user');
 
 $I->amOnPage('/');
 
@@ -19,23 +19,9 @@ $I->seeCurrentUrlEquals('/checkout/register');
 
 $I->fillInRegistrationForm();
 
-$I->seeCurrentUrlEquals('/checkout/addresses');
-
-$I->fillInBillingAddress();
-$I->fillInShippingAddress();
-
-$I->click('Add Billing Address');
-
-$I->seeCurrentUrlEquals('/checkout/addresses/save');
 
 $userAddresses = Auth::user()->addresses()->get()->toArray();
 
-$I->selectOption('billing', $userAddresses[0]['id']);
-$I->selectOption('shipping', $userAddresses[1]['id']);
-
-$I->click('Proceed to Payment');
-
-$I->seeCurrentUrlEquals('/checkout/payment');
-
+$I->proceedToPayment($userAddresses);
 
 

@@ -4,8 +4,8 @@ use Step\Acceptance\SiteUser;
 
 $I = new SiteUser($scenario);
 
-$I->am('Registered Site User');
-$I->wantTo('Check my cart as an unauthenticated Site User');
+$I->am('Site User');
+$I->wantTo('Check my shopping cart as an unauthenticated Site User');
 
 $I->amOnPage('/');
 $I->click('.add-to-cart');
@@ -19,22 +19,11 @@ $I->seeCurrentUrlEquals('/checkout/register');
 $I->click('Log Me In');
 $I->seeCurrentUrlEquals('/checkout/login');
 
+
 $I->fillInLoginForm();
 
-$I->seeCurrentUrlEquals('/checkout/addresses');
 
-$I->fillInBillingAddress();
-$I->fillInShippingAddress();
-
-$I->click('Add Billing Address');
-
-$I->seeCurrentUrlEquals('/checkout/addresses/save');
 
 $userAddresses = Auth::user()->addresses()->get()->toArray();
 
-$I->selectOption('billing', $userAddresses[0]['id']);
-$I->selectOption('shipping', $userAddresses[1]['id']);
-
-$I->click('Proceed to Payment');
-
-$I->seeCurrentUrlEquals('/checkout/payment');
+$I->proceedToPayment($userAddresses);
