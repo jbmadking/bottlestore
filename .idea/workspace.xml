@@ -2,20 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="4a0c28a0-e089-4553-a1ef-9c3b03955899" name="Default" comment="">
-      <change type="DELETED" beforePath="C:\nginx-1.6.2\html\bottlestore\resources\views\checkout\forms\addresses.blade.php" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/Commands/BulkImportProductsPage.php" afterPath="$PROJECT_DIR$/app/Commands/BulkImportProductsPage.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/tests/acceptance/CheckoutCartAsAuthenticatedSiteUserCept.php" afterPath="$PROJECT_DIR$/tests/acceptance/CheckoutCartAsAuthenticatedSiteUserCept.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/tests/acceptance/CheckoutCartAsGuestCept.php" afterPath="$PROJECT_DIR$/tests/acceptance/CheckoutCartAsGuestCept.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/tests/acceptance/CheckoutCartAsUnauthenticatedSiteUserCept.php" afterPath="$PROJECT_DIR$/tests/acceptance/CheckoutCartAsUnauthenticatedSiteUserCept.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/Http/Controllers/CheckoutController.php" afterPath="$PROJECT_DIR$/app/Http/Controllers/CheckoutController.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/Commands/FindOrCreateSocialiteUser.php" afterPath="$PROJECT_DIR$/app/Commands/FindOrCreateSocialiteUser.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/Commands/SaveUserAddresses.php" afterPath="$PROJECT_DIR$/app/Commands/SaveUserAddresses.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/tests/_support/Step/Acceptance/SiteUser.php" afterPath="$PROJECT_DIR$/tests/_support/Step/Acceptance/SiteUser.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/resources/views/checkout/address.blade.php" afterPath="$PROJECT_DIR$/resources/views/checkout/address.blade.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/resources/views/checkout/forms/address.blade.php" afterPath="$PROJECT_DIR$/resources/views/checkout/forms/address.blade.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/resources/views/users/dashboard.blade.php" afterPath="$PROJECT_DIR$/resources/views/users/dashboard.blade.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/resources/views/auth/login.blade.php" afterPath="$PROJECT_DIR$/resources/views/auth/login.blade.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/config/services.php" afterPath="$PROJECT_DIR$/config/services.php" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <list id="e653db84-3497-40cc-8981-88a3e0e2ddd8" name="Rejected commit: Default" comment="Using PHPstorm to commit" />
@@ -255,7 +241,7 @@
   <component name="ProjectFrameBounds">
     <option name="x" value="-8" />
     <option name="y" value="-8" />
-    <option name="width" value="1376" />
+    <option name="width" value="1372" />
     <option name="height" value="744" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true">
@@ -281,7 +267,7 @@
       <sortByType />
     </navigator>
     <panes>
-      <pane id="Scope" />
+      <pane id="Scratches" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -374,7 +360,7 @@
           </PATH>
         </subPane>
       </pane>
-      <pane id="Scratches" />
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -382,9 +368,9 @@
     <property name="TODO_SCOPE" value="application" />
     <property name="FullScreen" value="false" />
     <property name="recentsLimit" value="5" />
-    <property name="settings.editor.selected.configurable" value="fileTemplates" />
+    <property name="settings.editor.selected.configurable" value="vcs.Git" />
     <property name="settings.editor.splitter.proportion" value="0.2" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="last_opened_file_path" value="C:/Program Files/Git/cmd/git.exe" />
     <property name="FileHistory.git4idea.history.GitHistoryProvider_flatWidth0" value="149" />
     <property name="FileHistory.git4idea.history.GitHistoryProvider_flatOrder0" value="0" />
     <property name="FileHistory.git4idea.history.GitHistoryProvider_flatWidth1" value="149" />
@@ -528,12 +514,12 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="-8" y="-8" width="1376" height="744" extended-state="6" />
+    <frame x="-8" y="-8" width="1372" height="744" extended-state="0" />
     <editor active="false" />
     <layout>
       <window_info id="Gulp" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Remote Host" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.24848025" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.25228658" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32952693" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32952693" sideWeight="0.5" order="11" side_tool="true" content_ui="tabs" />
       <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
