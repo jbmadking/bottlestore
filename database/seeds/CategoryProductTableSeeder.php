@@ -7,6 +7,6 @@ class CategoryProductTableSeeder extends Seeder
 {
     public function run()
     {
-        TestDummy::times(20)->create('App\CategoryProduct');
+        TestDummy::times(20)->create('App\Repositories\CategoryProduct');
     }
 }

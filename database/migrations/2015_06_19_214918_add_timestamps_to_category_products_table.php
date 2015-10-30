@@ -13,7 +13,7 @@ class AddTimestampsToCategoryProductsTable extends Migration {
 	public function up()
 	{
 
-		Schema::table('category_product', function(Blueprint $table)
+		Schema::table('category_products', function(Blueprint $table)
 		{
 			$table->timestamps();
 		});
@@ -26,7 +26,7 @@ class AddTimestampsToCategoryProductsTable extends Migration {
 	 */
 	public function down()
 	{
-		Schema::table('category_product', function(Blueprint $table)
+		Schema::table('category_products', function(Blueprint $table)
 		{
 			$table->dropTimestamps();
 		});

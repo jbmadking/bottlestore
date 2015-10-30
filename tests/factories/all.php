@@ -1,7 +1,7 @@
 <?php
 
 $factory(
-    'App\Category', [
+    'App\Repositories\Category', [
 
         'parent_id' => $faker->numberBetween(1, 20),
         'name' => $faker->lastName,
@@ -16,7 +16,7 @@ $factory(
 );
 
 $factory(
-    'App\Product', [
+    'App\Repositories\Product', [
 
         'name' => $faker->monthName,
         'image' => $faker->imageUrl(),
@@ -34,8 +34,8 @@ $factory(
 );
 
 $factory(
-    'App\CategoryProduct', [
-        'category_id' => 'factory:App\Category',
-        'product_id' => 'factory:App\Product',
-    ]
+    'App\Repositories\CategoryProduct', [
+        'category_id' => 'factory:App\Repositories\Category',
+        'product_id' => 'factory:App\Repositories\Product',
+    ],  'category_products'
 );
