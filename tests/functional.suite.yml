@@ -9,4 +9,4 @@ modules:
     enabled: [Filesystem, FunctionalHelper, Laravel5]
     config:
         Laravel5:
-            url: 'http://bottlestore.app:8000/'
+            url: 'http://bottlestore.local:8088/'

@@ -18,6 +18,6 @@ $I->seeCurrentUrlEquals('/checkout/index');
 
 $I->click('Proceed to Checkout');
 
-$userAddresses = Auth::user()->addresses()->get()->toArray();
+$userAddresses = \App\Repositories\UserAddress::get()->toArray();
 
 $I->proceedToPayment($userAddresses);

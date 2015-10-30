@@ -1,4 +1,5 @@
 <?php
+use Illuminate\Support\Facades\Auth;
 use Step\Acceptance\SiteUser;
 
 $I = new SiteUser($scenario);
