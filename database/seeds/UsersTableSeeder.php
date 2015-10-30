@@ -18,7 +18,7 @@ class UsersTableSeeder extends Seeder
                 'email' => 'jbmatikinye@gmail.com',
                 'password' => '$2y$10$qJz15oXLh65sFVHC9KChkeuBaZLauVY/HjD5lSOncSlGZzG5VjcNe',
                 'remember_token' => 'j26SrR2lk5Fl5zSFSpjBVpgj2jaRxWEdVBQXrXB7QMUUVA2cMo33K3g40lt8',
-                'is_admin' => true,
+                'is_admin' => false,
                 'username' => ''
             ]
         );
