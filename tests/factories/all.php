@@ -35,7 +35,18 @@ $factory(
 
 $factory(
     'App\Repositories\CategoryProduct', [
-        'category_id' => 'factory:App\Repositories\Category',
-        'product_id' => 'factory:App\Repositories\Product',
-    ],  'category_products'
+    'category_id' => 'factory:App\Repositories\Category',
+    'product_id' => 'factory:App\Repositories\Product',
+], 'category_products'
+);
+
+$factory(
+    'App\Repositories\User', [
+        'name' => $faker->monthName(),
+        'email' => $faker->email(),
+        'password' => $faker->password(6, 15),
+        'remember_token' => $faker->sha1(),
+        'is_admin' => $faker->boolean(),
+        'username' => $faker->userName()
+    ]
 );
