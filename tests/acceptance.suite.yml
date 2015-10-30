@@ -12,4 +12,4 @@ modules:
         - Laravel5
     config:
         PhpBrowser:
-            url: 'http://bottlestore.app:8000/'
+            url: 'http://bottlestore.local:8088/'
