@@ -24,13 +24,9 @@ before_script:
 script:
   - composer install
   - php artisan migrate:install
-  - php artisan migrate:resfresh
+  - php artisan migrate:refresh
   - php artisan migrate:status
   - php artisan migrate --seed
-  
-  - mysql -e 'INSERT INTO `users` (`name`, `email`, `password`, `remember_token`, `created_at`, `updated_at`, `is_admin`, `username`) VALUES ('Joshua Matikinye', 'jbmatikinye@gmail.com', '$2y$10$qJz15oXLh65sFVHC9KChkeuBaZLauVY/HjD5lSOncSlGZzG5VjcNe', 'j26SrR2lk5Fl5zSFSpjBVpgj2jaRxWEdVBQXrXB7QMUUVA2cMo33K3g40lt8', '2015-08-30 21:27:34', '2015-10-16 19:38:05', 0, '');'
-  - mysql -e 'INSERT INTO `users` (`name`, `email`, `password`, `remember_token`, `created_at`, `updated_at`, `is_admin`, `username`) VALUES ('Bradshaw Matikinye', 'joshua@matikinye.com', '$2y$10$EFX1sGEGZQTswz4W8eKX8OaNZpofOvIE9I4.AzTCPtQIeCOQj96c2', 'BB1kT3FmXdfpcyvBzKXE62wBjin7hbXOuY9keKVBncyRyfYZp40PPXaJVUkm', '2015-08-30 21:32:26', '2015-09-11 22:05:29', 1, '');'
-  - mysql -e 'INSERT INTO `users` (`name`, `email`, `password`, `remember_token`, `created_at`, `updated_at`, `is_admin`, `username`) VALUES ('Lindsay Matikinye', 'lindsay@matikinye.co.za', '$2y$10$pUc7SB3.ccDr/wenG6nRSee6oO11r7eHyQG0M8g2THbPUeuD6G90O', 'RpJY9Wi0Y7UJCHsJaO5KA6eQavlvhgRlkWab0okLIcJpCnB2ZMqgKInmquFM', '2015-09-06 19:30:29', '2015-09-10 23:05:40', 0, '');'
   
   - vendor/bin/codecept run acceptance
 
