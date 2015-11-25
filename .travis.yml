@@ -13,18 +13,19 @@ env:
   - DB=mysql
 
 mysql:
-  database: skills-app
+  database: bottlestore-app
   username: root
   encoding: utf8
 
 before_script:
-  - mysql -e 'create database `skills-app`;'
+  - mysql -e 'create database `bottlestore-app`;'
   
 
 script:
   - composer install
   - php artisan migrate:install
   - php artisan migrate
+  - php artisan migrate:status
   - php artisan migrate --seed
   
   - vendor/bin/codecept run acceptance
