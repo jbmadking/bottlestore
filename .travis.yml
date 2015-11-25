@@ -25,7 +25,6 @@ script:
   - composer install
   - php artisan migrate:install
   - php artisan migrate
-  - php artisan migrate:status
   - php artisan migrate --seed
   
   - vendor/bin/codecept run acceptance

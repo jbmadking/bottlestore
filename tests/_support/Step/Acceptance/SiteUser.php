@@ -1,6 +1,8 @@
 <?php
 namespace Step\Acceptance;
 
+use App\Repositories\Address;
+
 class SiteUser extends \AcceptanceTester
 {
 
@@ -15,7 +17,6 @@ class SiteUser extends \AcceptanceTester
         $I->fillField('billing[province]', 'Masvingo');
         $I->fillField('billing[postal_code]', '9999');
     }
-
 
     public function fillInShippingAddress()
     {
@@ -58,12 +59,17 @@ class SiteUser extends \AcceptanceTester
 
         $I->seeCurrentUrlEquals('/checkout/addresses/save');
 
-        if(!empty($userAddresses)){
-            $I->selectOption('billing', $userAddresses[0]['id']);
+        if (!empty($userAddresses)) {
+            $I->selectOption('billing', 7);
         }
 
         $I->click('Proceed to Payment');
         $I->seeCurrentUrlEquals('/checkout/payment');
+    }
+
+    public function addresses()
+    {
+        return Address::all();
     }
 
 }

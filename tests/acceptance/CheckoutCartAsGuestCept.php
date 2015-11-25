@@ -20,9 +20,6 @@ $I->seeCurrentUrlEquals('/checkout/register');
 
 $I->fillInRegistrationForm();
 
-
-$userAddresses = Auth::user()->addresses()->get()->toArray();
-
-$I->proceedToPayment($userAddresses);
+$I->proceedToPayment($I->addresses());
 
 

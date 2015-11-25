@@ -10,4 +10,4 @@ Feature: User Registration
     And L fill in my password
     And L fill in the password confirmation
     And I click the register_user button
-    Then I should see "Dashbord"
+    Then I should see "Dashboard"

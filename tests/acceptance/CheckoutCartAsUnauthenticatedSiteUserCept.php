@@ -20,11 +20,6 @@ $I->seeCurrentUrlEquals('/checkout/register');
 $I->click('Log Me In');
 $I->seeCurrentUrlEquals('/checkout/login');
 
-
 $I->fillInLoginForm();
 
-
-
-$userAddresses = Auth::user()->addresses()->get()->toArray();
-
-$I->proceedToPayment($userAddresses);
+$I->proceedToPayment($I->addresses());

@@ -8,9 +8,6 @@ class CategoryProductTableSeeder extends Seeder
 {
     public function run()
     {
-        DB::table('products')->delete();
-        DB::table('categories')->delete();
-
         TestDummy::times(20)->create('App\Repositories\CategoryProduct');
     }
 }
