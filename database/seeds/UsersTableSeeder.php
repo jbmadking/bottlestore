@@ -1,7 +1,6 @@
 <?php
 
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\DB;
 use Laracasts\TestDummy\Factory as TestDummy;
 
 class UsersTableSeeder extends Seeder
@@ -9,7 +8,7 @@ class UsersTableSeeder extends Seeder
     public function run()
     {
         TestDummy::create(
-            'App\Repositories\User',
+                'App\Repositories\User',
             [
                 'id' => 1,
                 'name' => 'Joshua Matikinye',
