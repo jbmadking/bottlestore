@@ -2,6 +2,7 @@
 namespace Step\Acceptance;
 
 use App\Repositories\Address;
+use App\Repositories\Product;
 
 class SiteUser extends \AcceptanceTester
 {
@@ -49,21 +50,29 @@ class SiteUser extends \AcceptanceTester
         $I->click('register_user');
     }
 
-    public function proceedToPayment($userAddresses)
+    public function proceedToPayment()
     {
         $I = $this;
 
         $I->seeCurrentUrlEquals('/checkout/addresses');
+
         $I->fillInBillingAddress();
+
         $I->click('Add Address');
 
         $I->seeCurrentUrlEquals('/checkout/addresses/save');
 
+        $userAddresses  = $I->addresses()->toArray();
+
         if (!empty($userAddresses)) {
-            $I->selectOption('billing', 7);
+
+            $lastAddedAddress = array_pop($userAddresses);
+
+            $I->selectOption('billing', $lastAddedAddress['id']);
         }
 
         $I->click('Proceed to Payment');
+
         $I->seeCurrentUrlEquals('/checkout/payment');
     }
 
@@ -72,4 +81,8 @@ class SiteUser extends \AcceptanceTester
         return Address::all();
     }
 
+    public function products()
+    {
+        return Product::all();
+    }
 }

@@ -9,7 +9,9 @@ $I->amLoggedAs($I->aSiteAdministrator());
 
 $I->amOnPage('/admin/categories');
 
-$I->click('Beer');
+$category = \App\Repositories\Category::get()->toArray();
+
+$I->click($category[0]['name']);
 
 $I->seeCurrentUrlEquals('/admin/categories/1/edit');
 

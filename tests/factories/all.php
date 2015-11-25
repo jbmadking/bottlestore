@@ -38,12 +38,32 @@ $factory(
 $factory(
     'App\Repositories\User',
     [
-        'id' => 1,
-        'name' => 'Joshua Matikinye',
-        'email' => 'jbmatikinye@gmail.com',
+        'id' => $faker->numberBetween(1, 20),
+        'name' => $faker->name,
+        'email' => $faker->email,
         'password' => '$2y$10$qJz15oXLh65sFVHC9KChkeuBaZLauVY/HjD5lSOncSlGZzG5VjcNe',
-        'remember_token' => 'j26SrR2lk5Fl5zSFSpjBVpgj2jaRxWEdVBQXrXB7QMUUVA2cMo33K3g40lt8',
+        'remember_token' => '',
         'is_admin' => false,
         'username' => ''
     ]
+);
+
+$factory(
+    'App\Repositories\Address',
+    [
+        'id' => $faker->numberBetween(1, 20),
+        'street_number' => $faker->numberBetween(23, 345),
+        'street_name' => $faker->streetName,
+        'suburb' => $faker->name,
+        'city' => $faker->city,
+        'province' => $faker->name,
+        'postal_code' => $faker->numberBetween(1000, 9999)
+    ]
+);
+
+$factory(
+    'App\Repositories\UserAddress', [
+    'user_id' => 1,
+    'address_id' => 7,
+], 'user_addresses'
 );

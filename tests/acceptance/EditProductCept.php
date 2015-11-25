@@ -1,12 +1,21 @@
-<?php 
-$I = new AcceptanceTester($scenario);
+<?php
+
+use Step\Acceptance\SiteUser;
+
+$I = new SiteUser($scenario);
+
 $I->am('Site Administrator');
 $I->wantTo('Edit an Existing Product');
 
 $I->amLoggedAs($I->aSiteAdministrator());
 $I->amOnPage('/admin/products');
 
-$I->click('Carling Black Label 6 Pack');
+$products = $I->products()->toArray();
+
+$productName = $products[0]['name'];
+
+$I->click($productName);
+
 $I->seeCurrentUrlEquals('/admin/products/44/edit');
 
 $category = \App\Repositories\Category::get()->toArray();
