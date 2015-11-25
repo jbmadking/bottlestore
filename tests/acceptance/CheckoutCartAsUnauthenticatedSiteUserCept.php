@@ -1,6 +1,5 @@
 <?php
 
-use Illuminate\Support\Facades\Auth;
 use Step\Acceptance\SiteUser;
 
 $I = new SiteUser($scenario);
@@ -18,8 +17,16 @@ $I->click('Proceed to Checkout');
 $I->seeCurrentUrlEquals('/checkout/register');
 
 $I->click('Log Me In');
+
 $I->seeCurrentUrlEquals('/checkout/login');
 
-$I->fillInLoginForm();
+$I->amOnPage('/checkout/register');
 
-$I->proceedToPayment($I->addresses());
+$I->fillInRegistrationForm();
+
+$I->proceedToPayment();
+
+//$I->fillInLoginForm();
+
+//$I->seeCurrentUrlEquals('/checkout/login');
+
