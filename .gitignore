@@ -1,6 +1,7 @@
 /vendor
 /node_modules
 .env
+.env.local
 public/images
 tests/_output/*
 tests/_data/*
