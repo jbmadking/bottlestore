@@ -27,9 +27,9 @@ script:
   - php artisan migrate:install
   - php artisan migrate
   - php artisan migrate:status
-  - mysql -e 'RENAME TABLE `category_product` TO `category_products`;'
+  - mysql -e 'RENAME TABLE `skills-app`.`category_product` TO `skills-app`.`category_products`;'
   - php artisan migrate --seed
-  - mysql -e 'RENAME TABLE `category_products` TO `category_product`;'
+  - mysql -e 'RENAME TABLE `skills-app`.`category_products` TO `skills-app`.`category_product`;'
   
   - vendor/bin/codecept run acceptance
 
