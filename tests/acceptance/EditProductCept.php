@@ -12,11 +12,12 @@ $I->amOnPage('/admin/products');
 
 $products = $I->products()->toArray();
 
-$productName = $products[0]['name'];
+$productName = $products[5]['name'];
+$productId = $products[5]['id'];
 
 $I->click($productName);
 
-$I->seeCurrentUrlEquals('/admin/products/44/edit');
+$I->seeCurrentUrlEquals('/admin/products/' . $productId . '/edit');
 
 $category = \App\Repositories\Category::get()->toArray();
 
@@ -30,7 +31,7 @@ $I->selectOption('status', '1');
 $I->attachFile('image', 'roundrect8537796.gif');
 
 $I->click('Update Product');
-$I->seeCurrentUrlEquals('/admin/products/44');
+$I->seeCurrentUrlEquals('/admin/products/' . $productId);
 
 //$I->see('New Product: Malt Liquor Created');
 

@@ -14,7 +14,7 @@ class CreateCategoryProductPivotTable extends Migration
     {
         Schema::create(
             
-            'category_products', function (Blueprint $table) {
+            'category_product', function (Blueprint $table) {
 
             $table->integer('category_id')->unsigned()->index();
             $table->foreign('category_id')->references('id')->on('categories')->onDelete('cascade');
@@ -31,6 +31,6 @@ class CreateCategoryProductPivotTable extends Migration
      */
     public function down()
     {
-        Schema::drop('category_products');
+        Schema::drop('category_product');
     }
 }

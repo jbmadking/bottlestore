@@ -39,7 +39,6 @@ class LoginSiteUser extends Command implements SelfHandling
      */
     public function handle()
     {
-
         return $this->auth->attempt(
             $this->request->except(['_token', 'remember', 'login_user']),
             $this->request->get('remember')

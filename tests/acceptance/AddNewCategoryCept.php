@@ -6,6 +6,7 @@ $I->wantTo('Add a new Category');
 
 $I->amLoggedAs($I->aSiteAdministrator());
 
+
 $I->amOnPage('/admin/categories');
 
 $I->click('Add Category');
