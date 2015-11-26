@@ -32,7 +32,7 @@ $factory(
     'App\Repositories\CategoryProduct', [
     'category_id' => 'factory:App\Repositories\Category',
     'product_id' => 'factory:App\Repositories\Product',
-], 'category_products'
+], 'category_product'
 );
 
 $factory(

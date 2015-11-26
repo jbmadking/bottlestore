@@ -5,7 +5,6 @@ use App\Http\Requests;
 use App\Services\AdminRegistrar as Registrar;
 use Illuminate\Auth\Guard;
 use Illuminate\Foundation\Auth\AuthenticatesAndRegistersUsers;
-use Illuminate\Support\Facades\Auth;
 
 class UsersController extends Controller
 {
@@ -68,7 +67,7 @@ class UsersController extends Controller
      */
     public function getDashboard()
     {
-        if (!Auth::user()->is_admin) {
+        if (!$this->auth->user()->is_admin) {
 
             flash('Restricted Access!!!');
 

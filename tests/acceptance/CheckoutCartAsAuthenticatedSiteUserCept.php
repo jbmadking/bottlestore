@@ -18,8 +18,4 @@ $I->seeCurrentUrlEquals('/checkout/index');
 
 $I->click('Proceed to Checkout');
 
-$I->seeCurrentUrlEquals('/checkout/register');
-
-$I->fillInRegistrationForm();
-
 $I->proceedToPayment();
