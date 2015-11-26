@@ -6,6 +6,11 @@ $I->wantTo('Add a new Category');
 
 $I->amLoggedAs($I->aSiteAdministrator());
 
+echo 'host' . env('DB_HOST', 'localhost');
+echo 'database' . env('DB_DATABASE', 'skills-app');
+echo 'username' . env('DB_USERNAME', 'root');
+echo 'password' . env('DB_PASSWORD', '');
+
 $I->amOnPage('/admin/categories');
 
 $I->click('Add Category');
