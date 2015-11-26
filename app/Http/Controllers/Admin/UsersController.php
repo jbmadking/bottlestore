@@ -5,6 +5,7 @@ use App\Http\Requests;
 use App\Services\AdminRegistrar as Registrar;
 use Illuminate\Auth\Guard;
 use Illuminate\Foundation\Auth\AuthenticatesAndRegistersUsers;
+use Illuminate\Http\Response;
 
 class UsersController extends Controller
 {
