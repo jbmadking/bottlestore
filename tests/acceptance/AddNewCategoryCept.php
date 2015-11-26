@@ -1,10 +1,6 @@
 <?php
 $I = new AcceptanceTester($scenario);
 
-$I->am('Site Administrator');
-$I->wantTo('Add a new Category');
-
-$I->amLoggedAs($I->aSiteAdministrator());
 
 var_dump('app' . env('APP_ENV', ''));
 var_dump('host' . env('DB_HOST', 'localhost'));
@@ -13,6 +9,13 @@ var_dump('username' . env('DB_USERNAME', 'root'));
 var_dump('password' . env('DB_PASSWORD', ''));
 
 die();
+
+$I->am('Site Administrator');
+$I->wantTo('Add a new Category');
+
+$I->amLoggedAs($I->aSiteAdministrator());
+
+
 $I->amOnPage('/admin/categories');
 
 $I->click('Add Category');
