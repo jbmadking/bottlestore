@@ -16,7 +16,7 @@ $factory(
 $factory(
     'App\Repositories\Product', [
 
-        'name' => $faker->monthName,
+        'name' => $faker->lastName,
         'image' => $faker->imageUrl(),
         'description' => $faker->sentence('15'),
 
