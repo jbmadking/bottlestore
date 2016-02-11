@@ -197,6 +197,7 @@ return [
         'URL' => 'Illuminate\Support\Facades\URL',
         'Validator' => 'Illuminate\Support\Facades\Validator',
         'View' => 'Illuminate\Support\Facades\View',
+        'Gate' => Illuminate\Support\Facades\Gate::class,
         'Flash' => 'Laracasts\Flash\Flash',
         'Form' => 'Illuminate\Html\FormFacade',
         'Html' => 'Illuminate\Html\HtmlFacade',
