@@ -33,7 +33,7 @@ class CategoriesController extends Controller
      */
     public function create()
     {
-        $categories = Category::lists('name', 'id');
+        $categories = Category::lists('name', 'id')->toArray();
 
         $categories[0] = 'None';
 
@@ -55,10 +55,10 @@ class CategoriesController extends Controller
         Category::create($request->all());
 
         flash()->message(
-            sprintf(
-                'New Category: %s Created',
-                $request->get('name')
-            )
+          sprintf(
+            'New Category: %s Created',
+            $request->get('name')
+          )
         );
 
         return redirect('admin/categories');
@@ -87,12 +87,13 @@ class CategoriesController extends Controller
     {
         $category = Category::findOrFail($id);
 
-        $categories = Category::where('id', '<>', $id)->lists('name', 'id');
+        $categories = Category::where('id', '<>', $id)
+          ->lists('name', 'id')
+          ->toArray();
 
         $categories[0] = 'None';
 
         ksort($categories);
-
 
         return view('admin.categories.edit', compact('category', 'categories'));
     }
@@ -117,10 +118,10 @@ class CategoriesController extends Controller
         $category->update($data);
 
         flash()->message(
-            sprintf(
-                'Category: %s Updated',
-                $category->name
-            )
+          sprintf(
+            'Category: %s Updated',
+            $category->name
+          )
         );
 
         return redirect('admin/categories');

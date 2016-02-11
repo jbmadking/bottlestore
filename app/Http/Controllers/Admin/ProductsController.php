@@ -87,7 +87,7 @@ class ProductsController extends Controller
     {
         $product = Product::findOrFail($id);
 
-        $categories = Category::lists('name', 'id');
+        $categories = Category::lists('name', 'id')->toArray();
 
         $categories[0] = 'None';
 

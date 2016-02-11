@@ -2,6 +2,7 @@
 
 use App\Http\Requests\UserRequest;
 use App\Repositories\User;
+use Exception;
 use Illuminate\Contracts\Bus\SelfHandling;
 use Illuminate\Auth\Guard as Authenticator;
 

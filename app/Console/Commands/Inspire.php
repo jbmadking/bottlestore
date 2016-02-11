@@ -3,30 +3,47 @@
 use Illuminate\Console\Command;
 use Illuminate\Foundation\Inspiring;
 
-class Inspire extends Command {
+class Inspire extends Command
+{
 
-	/**
-	 * The console command name.
-	 *
-	 * @var string
-	 */
-	protected $name = 'inspire';
+    /**
+     * The console command name.
+     *
+     * @var string
+     */
+    protected $name = 'inspire';
 
-	/**
-	 * The console command description.
-	 *
-	 * @var string
-	 */
-	protected $description = 'Display an inspiring quote';
+    /**
+     * The console command description.
+     *
+     * @var string
+     */
+    protected $description = 'Display an inspiring quote';
 
-	/**
-	 * Execute the console command.
-	 *
-	 * @return mixed
-	 */
-	public function handle()
-	{
-		$this->comment(PHP_EOL.Inspiring::quote().PHP_EOL);
-	}
+    /**
+     * Execute the console command.
+     *
+     * @return mixed
+     */
+    public function handle()
+    {
+        $this->comment(PHP_EOL . Inspiring::quote() . PHP_EOL);
+        $this->table(
+            ['Name', 'Nickname'],
+            [
+                ['Joshua', 'Jay Rock', 'may Day'],
+                ['Lindsay', 'Hapagagwi'],
+                ['Bellariz', 'Bhola'],
+                ['Raymond', 'Mondi'],
+            ]
+        );
+
+        $this->info("That's for sure. We all know J rock");
+
+        $question = 'Are you sure you know who rock?';
+        $choices = ['Joshua', 'Bradshaw', 'Matikinye'];
+        $this->choice($question, $choices);
+
+    }
 
 }

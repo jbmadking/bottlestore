@@ -13,15 +13,20 @@ class PaymentController extends Controller
     const STATUS_FAILED = 'FAILED';
     const STATUS_COMPLETE = 'COMPLETE';
     const STATUS_PENDING = 'PENDING';
+    const PAYMENT_STATUS_COMPLETE = 'Payment Status -- COMPLETE';
+    const PAYMENT_STATUS_FAILED = 'Payment Status -- FAILED';
+    const PAYMENT_STATUS_PENDING = 'Payment Status -- PENDING';
+    const PAYMENT_STATUS_DEFAULT = 'Payment Status -- DEFAULT';
+    const ERROR = 'error';
 
     /**
      * @var array Valid PayFast hosts list
      */
     protected $validHosts = [
-        'www.payfast.co.za',
-        'sandbox.payfast.co.za',
-        'w1w.payfast.co.za',
-        'w2w.payfast.co.za'
+      'www.payfast.co.za',
+      'sandbox.payfast.co.za',
+      'w1w.payfast.co.za',
+      'w2w.payfast.co.za',
     ];
 
     const SANDBOX_MODE = true;
@@ -77,13 +82,15 @@ class PaymentController extends Controller
         }
 
         $logger->debug(
-            "Posted Variables --\n" . implode(
-                "\n", array_filter(
-                    $request->input(), function ($value) {
-                    return !empty($value);
-                }
-                )
-            ) . "\n"
+          "Posted Variables --\n".implode(
+            "\n",
+            array_filter(
+              $request->input(),
+              function ($value) {
+                  return !empty($value);
+              }
+            )
+          )."\n"
         );
 
         $payFastData = $this->cleanPostVariables($request->input());
@@ -129,7 +136,10 @@ class PaymentController extends Controller
             $response = $this->checkPaymentStatusCurl($hostUrl, $serialisedPayFastData);
         } else {
 
-            $response = $this->checkPaymentStatusHttp($pfHost, $serialisedPayFastData);
+            $response = $this->checkPaymentStatusHttp(
+              $pfHost,
+              $serialisedPayFastData
+            );
         }
 
         $lines = explode("\r\n", $response);
@@ -154,9 +164,10 @@ class PaymentController extends Controller
     {
 
         return array_map(
-            function ($val) {
-                return urlencode($val);
-            }, $payFastData
+          function ($val) {
+              return urlencode($val);
+          },
+          $payFastData
         );
     }
 
@@ -192,8 +203,9 @@ class PaymentController extends Controller
 
         $payFastParamString = '';
         foreach ($payFastData as $key => $val) {
-            if ($key != 'signature')
-                $payFastParamString .= $key . '=' . $val . '&';
+            if ($key != 'signature') {
+                $payFastParamString .= $key.'='.$val.'&';
+            }
         }
 
         return substr($payFastParamString, 0, -1);
@@ -208,26 +220,9 @@ class PaymentController extends Controller
      */
     protected function isValidPayFastHost(Request $request)
     {
-        $validIps = [];
+        $validIps = $this->getValidIpAddresses();
 
-        foreach ($this->validHosts as $payFastHostname) {
-
-            $payFastIpAddress = gethostbynamel($payFastHostname);
-
-            if ($payFastIpAddress !== false) {
-
-                $validIps = array_merge($payFastIpAddress, $validIps);
-            }
-        }
-
-        $validIps = array_unique($validIps);
-
-        if (in_array($request->server('REMOTE_ADDR'), $validIps)) {
-
-            return true;
-        }
-
-        return false;
+        return in_array($request->server('REMOTE_ADDR'), $validIps);
     }
 
     /**
@@ -238,17 +233,32 @@ class PaymentController extends Controller
      * @return mixed
      * @internal param $pfHost
      */
-    protected function checkPaymentStatusCurl($hostUrl, $serialisedPayFastData, $pfProxy = null)
-    {
+    protected function checkPaymentStatusCurl(
+      $hostUrl,
+      $serialisedPayFastData,
+      $pfProxy = null
+    ) {
 
         // Create default cURL object
         $ch = curl_init();
 
         // Set cURL options - Use curl_setopt for freater PHP compatibility
         // Base settings
-        curl_setopt($ch, CURLOPT_USERAGENT, self::PF_USER_AGENT);  // Set user agent
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);      // Return output as string rather than outputting it
-        curl_setopt($ch, CURLOPT_HEADER, false);             // Don't include header in output
+        curl_setopt(
+          $ch,
+          CURLOPT_USERAGENT,
+          self::PF_USER_AGENT
+        );  // Set user agent
+        curl_setopt(
+          $ch,
+          CURLOPT_RETURNTRANSFER,
+          true
+        );      // Return output as string rather than outputting it
+        curl_setopt(
+          $ch,
+          CURLOPT_HEADER,
+          false
+        );             // Don't include header in output
         curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
 
@@ -257,8 +267,9 @@ class PaymentController extends Controller
         curl_setopt($ch, CURLOPT_POST, true);
         curl_setopt($ch, CURLOPT_POSTFIELDS, $serialisedPayFastData);
         curl_setopt($ch, CURLOPT_TIMEOUT, self::PF_TIMEOUT);
-        if (!empty($pfProxy))
+        if (!empty($pfProxy)) {
             curl_setopt($ch, CURLOPT_PROXY, $pfProxy);
+        }
 
         // Execute CURL
         $response = curl_exec($ch);
@@ -281,16 +292,22 @@ class PaymentController extends Controller
 
         // Construct Header
         $header .= "POST /eng/query/validate HTTP/1.0\r\n";
-        $header .= "Host: " . $pfHost . "\r\n";
-        $header .= "User-Agent: " . self::PF_USER_AGENT . "\r\n";
+        $header .= "Host: ".$pfHost."\r\n";
+        $header .= "User-Agent: ".self::PF_USER_AGENT."\r\n";
         $header .= "Content-Type: application/x-www-form-urlencoded\r\n";
-        $header .= "Content-Length: " . strlen($serialisedPayFastData) . "\r\n\r\n";
+        $header .= "Content-Length: ".strlen($serialisedPayFastData)."\r\n\r\n";
 
         // Connect to server
-        $socket = fsockopen('ssl://' . $pfHost, 443, $errno, $errstr, self::PF_TIMEOUT);
+        $socket = fsockopen(
+          'ssl://'.$pfHost,
+          443,
+          $errno,
+          $errstr,
+          self::PF_TIMEOUT
+        );
 
         // Send command to server
-        fputs($socket, $header . $serialisedPayFastData);
+        fputs($socket, $header.$serialisedPayFastData);
 
         // Read the response from the server
         while (!feof($socket)) {
@@ -301,9 +318,11 @@ class PaymentController extends Controller
                 // read the header
                 $headerDone = true;
             } // If header has been processed
-            else if ($headerDone) {
-                // Read the main response
-                $response .= $line;
+            else {
+                if ($headerDone) {
+                    // Read the main response
+                    $response .= $line;
+                }
             }
         }
 
@@ -311,33 +330,60 @@ class PaymentController extends Controller
     }
 
     /**
-     * @param \Illuminate\Http\Request $request
-     * @param \Illuminate\Log\Writer   $logger
-     * @param                          $payFastData
+     * @param Request $request
+     * @param Writer  $logger
+     * @param         $payFastData
      */
-    protected function updateOrderStatus(Request $request, Writer $logger, $payFastData)
-    {
-        $order = Order::where('invoice_no', $request->input('m_payment_id'))->first();
+    protected function updateOrderStatus(
+      Request $request,
+      Writer $logger,
+      $payFastData
+    ) {
+        $order = Order::where('invoice_no', $request->input('m_payment_id'))
+          ->first();
 
         switch ($payFastData['payment_status']) {
             case self::STATUS_COMPLETE:
-                $logger->debug('Payment Status -- COMPLETE');
-                $order->status = 'paid';
+                $logger->debug(self::PAYMENT_STATUS_COMPLETE);
+                $order->status = strtolower(self::STATUS_COMPLETE);
                 break;
             case self::STATUS_FAILED:
-                $logger->error('Payment Status -- FAILED');
-                $order->status = 'failed';
+                $logger->error(self::PAYMENT_STATUS_FAILED);
+                $order->status = strtolower(self::STATUS_FAILED);
                 break;
             case self::STATUS_PENDING:
-                $logger->debug('Payment Status -- PENDING');
-                $order->status = 'pending';
+                $logger->debug(self::PAYMENT_STATUS_PENDING);
+                $order->status = strtolower(self::STATUS_PENDING);
                 break;
             default:
-                $logger->error('Payment Status -- DEFAULT');
-                $order->status = 'error';
+                $logger->error(self::PAYMENT_STATUS_DEFAULT);
+                $order->status = self::ERROR;
                 break;
         }
 
         $order->save();
+    }
+
+    /**
+     *
+     * @return array
+     */
+    protected function getValidIpAddresses()
+    {
+        $validIps = [];
+
+        foreach ($this->validHosts as $payFastHostname) {
+
+            $payFastIpAddress = gethostbynamel($payFastHostname);
+
+            if ($payFastIpAddress !== false) {
+
+                $validIps[] = $payFastIpAddress;
+            }
+        }
+
+        $validIps = array_unique($validIps);
+
+        return $validIps;
     }
 }

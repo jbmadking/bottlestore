@@ -14,7 +14,7 @@ $I->seeCurrentUrlEquals('/register/user');
 
 $I->fillInRegistrationForm();
 
-$I->seeCurrentUrlEquals('/home');
+$I->seeCurrentUrlEquals('/user/dashboard');
 
 $I->see('Lindsay Matikinye');
 $I->see('Log Out');
