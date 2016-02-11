@@ -31,7 +31,7 @@ $I->selectOption('status', '1');
 $I->attachFile('image', 'roundrect8537796.gif');
 
 $I->click('Update Product');
-$I->seeCurrentUrlEquals('/admin/products/' . $productId);
+$I->seeCurrentUrlEquals('/admin/products');
 
-//$I->see('New Product: Malt Liquor Created');
+$I->see('Product Updated');
 

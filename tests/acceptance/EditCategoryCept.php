@@ -24,6 +24,6 @@ $I->fillField('description', 'Roober Test Category');
 
 $I->click('Update Category');
 
-$I->seeCurrentUrlEquals('/admin/categories/1');
+$I->seeCurrentUrlEquals('/admin/categories');
 
-//$I->see('Category: Roobeer Updated');
+$I->see('Category: Roobeer Updated');
