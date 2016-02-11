@@ -2,10 +2,11 @@
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests;
-use App\Services\AdminRegistrar as Registrar;
-use Illuminate\Auth\Guard;
+use App\Repositories\User;
 use Illuminate\Foundation\Auth\AuthenticatesAndRegistersUsers;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
 
 class UsersController extends Controller
 {
@@ -27,18 +28,41 @@ class UsersController extends Controller
      */
     protected $redirectTo = 'admin/dashboard';
 
+    /**
+     * Get a validator for an incoming registration request.
+     *
+     * @param  array $data
+     *
+     * @return \Illuminate\Contracts\Validation\Validator
+     */
+    public function validator(array $data)
+    {
+        return Validator::make(
+          $data, [
+            'name' => 'required|max:255',
+            'email' => 'required|email|max:255|unique:users',
+            'password' => 'required|confirmed|min:6',
+          ]
+        );
+    }
 
     /**
-     * Create a new authentication controller instance.
+     * Create a new user instance after a valid registration.
      *
-     * @param  $auth
-     * @param  $registrar
+     * @param  array $data
+     *
+     * @return User
      */
-    public function __construct(Guard $auth, Registrar $registrar)
+    public function create(array $data)
     {
-        $this->auth = $auth;
-        $this->registrar = $registrar;
-
+        return User::create(
+          [
+            'name' => $data['name'],
+            'email' => $data['email'],
+            'password' => bcrypt($data['password']),
+            'is_admin' => true
+          ]
+        );
     }
 
     /**
@@ -68,7 +92,7 @@ class UsersController extends Controller
      */
     public function getDashboard()
     {
-        if (!$this->auth->user()->is_admin) {
+        if (!Auth::user()->is_admin) {
 
             flash('Restricted Access!!!');
 
