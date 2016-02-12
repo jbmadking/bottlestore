@@ -82,7 +82,7 @@ class PaymentController extends Controller
         }
 
         $logger->debug(
-          "Posted Variables --\n".implode(
+          "Posted Variables --\n" . implode(
             "\n",
             array_filter(
               $request->input(),
@@ -90,7 +90,7 @@ class PaymentController extends Controller
                   return !empty($value);
               }
             )
-          )."\n"
+          ) . "\n"
         );
 
         $payFastData = $this->cleanPostVariables($request->input());
@@ -133,7 +133,10 @@ class PaymentController extends Controller
 
         if (in_array('curl', get_loaded_extensions())) {
 
-            $response = $this->checkPaymentStatusCurl($hostUrl, $serialisedPayFastData);
+            $response = $this->checkPaymentStatusCurl(
+              $hostUrl,
+              $serialisedPayFastData
+            );
         } else {
 
             $response = $this->checkPaymentStatusHttp(
@@ -204,7 +207,7 @@ class PaymentController extends Controller
         $payFastParamString = '';
         foreach ($payFastData as $key => $val) {
             if ($key != 'signature') {
-                $payFastParamString .= $key.'='.$val.'&';
+                $payFastParamString .= $key . '=' . $val . '&';
             }
         }
 
@@ -286,45 +289,13 @@ class PaymentController extends Controller
      */
     protected function checkPaymentStatusHttp($pfHost, $serialisedPayFastData)
     {
-        $header = '';
-        $headerDone = false;
-        $response = '';
+        $socket = $this->getSocket($pfHost);
 
-        // Construct Header
-        $header .= "POST /eng/query/validate HTTP/1.0\r\n";
-        $header .= "Host: ".$pfHost."\r\n";
-        $header .= "User-Agent: ".self::PF_USER_AGENT."\r\n";
-        $header .= "Content-Type: application/x-www-form-urlencoded\r\n";
-        $header .= "Content-Length: ".strlen($serialisedPayFastData)."\r\n\r\n";
+        $header = $this->getHeader($pfHost, $serialisedPayFastData);
 
-        // Connect to server
-        $socket = fsockopen(
-          'ssl://'.$pfHost,
-          443,
-          $errno,
-          $errstr,
-          self::PF_TIMEOUT
-        );
+        fputs($socket, $header . $serialisedPayFastData);
 
-        // Send command to server
-        fputs($socket, $header.$serialisedPayFastData);
-
-        // Read the response from the server
-        while (!feof($socket)) {
-            $line = fgets($socket, 1024);
-
-            // Check if we are finished reading the header yet
-            if (strcmp($line, "\r\n") == 0) {
-                // read the header
-                $headerDone = true;
-            } // If header has been processed
-            else {
-                if ($headerDone) {
-                    // Read the main response
-                    $response .= $line;
-                }
-            }
-        }
+        $response = $this->readResponse($socket);
 
         return $response;
     }
@@ -385,5 +356,69 @@ class PaymentController extends Controller
         $validIps = array_unique($validIps);
 
         return $validIps;
+    }
+
+    /**
+     * @param $socket
+     *
+     * @return string
+     */
+    protected function readResponse($socket)
+    {
+        $response = '';
+        $headerDone = false;
+
+        while (!feof($socket)) {
+
+            $line = fgets($socket, 1024);
+
+            if ($headerDone) {
+                $response .= $line;
+                continue;
+            }
+
+            if (strcmp($line, "\r\n") == 0) {
+                $headerDone = true;
+            }
+        }
+
+        return $response;
+    }
+
+    /**
+     * @param string $pfHost
+     * @param string $serialisedPayFastData
+     *
+     * @return string
+     */
+    protected function getHeader($pfHost, $serialisedPayFastData)
+    {
+        $header = "POST /eng/query/validate HTTP/1.0\r\n";
+        $header .= "Host: " . $pfHost . "\r\n";
+        $header .= "User-Agent: " . self::PF_USER_AGENT . "\r\n";
+        $header .= "Content-Type: application/x-www-form-urlencoded\r\n";
+        $header .= "Content-Length: " . strlen(
+            $serialisedPayFastData
+          ) . "\r\n\r\n";
+
+        return $header;
+    }
+
+    /**
+     * @param $pfHost
+     *
+     * @return resource
+     */
+    protected function getSocket($pfHost)
+    {
+        $socket = fsockopen(
+          'ssl://' . $pfHost,
+          443,
+          $errno,
+          $errstr,
+          self::PF_TIMEOUT
+        );
+
+        return $socket;
     }
 }
